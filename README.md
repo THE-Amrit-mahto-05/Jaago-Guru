@@ -56,7 +56,7 @@ The 5-minute focus activation process is broken down into **5 distinct steps** t
 
 ### **Folder Structure**
 
-Below is the folder structure for the **Jaggo Guru** project. It includes both **frontend** (React Native/Flutter), **backend** (Node.js/Express), and **database** structure.
+Below is the folder structure for the **Jaggo Guru** project. It includes both **frontend** (React Native/React), **backend** (Node.js/Express), and **database** structure.
 
 ```plaintext
 Jaggo-Guru/
