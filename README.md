@@ -78,7 +78,7 @@ For later expansion.
    - Store responses temporarily in frontend state.
 
 3. **AI Feedback**  
-   - Prompt: “Evaluate this answer for clarity, correctness, and confidence. Give a score out of 10 and short feedback.”
+   - Prompt: “Evaluate this answer for clarity, correctness, and confidence. Give score out of 10 and short feedback.”
 
 4. **Store Everything**  
    - Save all questions, answers, and feedback to database.
