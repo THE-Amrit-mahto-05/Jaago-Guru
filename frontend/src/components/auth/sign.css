@@ -1,0 +1,95 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #7aabfa, #31486d);
+  color: white;
+}
+
+.signin-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width:100vw;
+  text-align: center;
+  
+}
+
+.navbar {
+  padding: 20px 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+}
+
+.logo span {
+  color: #3848f8;
+}
+
+.signin-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 50px;
+}
+
+.text-section {
+  max-width: 500px;
+  padding: 40px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(12px);           
+  -webkit-backdrop-filter: blur(12px);   
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+
+.text-section h2 {
+  font-size: 2.7rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.text-section p {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  color:black;
+  line-height: 1.6;
+}
+
+.signin-btn {
+  background: #38bdf8;
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+}
+
+.signin-btn:hover {
+  background: #0ea5e9;
+  transform: scale(1.05);
+}
+
+@media (max-width: 900px) {
+  .signin-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
