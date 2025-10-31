@@ -191,12 +191,13 @@ OPENAI_API_KEY=your_openai_api_key
 VITE_API_URL=http://localhost:5000/api
 ```
 
-### Contributors
+## 12. Contributors
 
-Amrit Kumar Mahto 
-Anuj Chhajad
-Ayush Kumar
-Nakul Sharma 
+- **Amrit Kumar Mahto**  
+- **Anuj Chhajad**  
+- **Ayush Kumar**  
+- **Nakul Sharma**
+
 
 
 
