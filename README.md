@@ -26,7 +26,7 @@ Build a web platform where users can:
 5. User can answer by typing or speaking  
 6. AI gives feedback on each answer  
 7. Store questions, answers, and scores in MySQL  
-8. View past interview history (progress report)  
+8. View past interview history  
 
 ---
 
@@ -103,7 +103,7 @@ Build a web platform where users can:
 - `/signup` → Signup  
 - `/dashboard` → User dashboard  
 - `/interview` → Chat-based interview interface  
-- `/results/:id` → Interview results and feedback page  
+- `/results/:id` → Interview results and feedback  
 
 ---
 
