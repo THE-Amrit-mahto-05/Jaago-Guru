@@ -103,7 +103,7 @@ Build a web platform where users can:
 - `/signup` → Signup  
 - `/dashboard` → User dashboard  
 - `/interview` → Chat-based interview interface  
-- `/results/:id` → Interview results and feedback page  
+- `/results/:id` → Interview results and feedback  
 
 ---
 
