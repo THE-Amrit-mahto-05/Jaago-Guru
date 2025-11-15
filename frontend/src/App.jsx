@@ -1,31 +1,29 @@
-import React from 'react'
-import Signin from './components/auth/sign'
-import Dashboard from './components/dashboard/dashboard1'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-const router = createBrowserRouter(
-  [
-    {
-      path:"/",
-      element:<Signin/>
-
-    },
-    {
-      path:"/dashboard",
-      element:<Dashboard/>
-    }
-  ]
-)
-
-const App = () => {
+function App() {
   return (
-    <>
-      <RouterProvider router={router} />
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
