@@ -7,7 +7,7 @@ const router = express.Router()
 router.post("/register", register)
 router.post("/login", login)
 router.get("/profile", verifyToken, (req, res) => {
-  res.json({ msg: "Profile accessed", user: req.user })
+  res.json({ message: "Profile accessed", user: req.user })
 });
 
 module.exports = router

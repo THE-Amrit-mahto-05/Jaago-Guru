@@ -6,7 +6,8 @@ const register = async (req, res, next) => {
     res.status(201).json({
       success: true,
       message: "User registered successfully",
-      data: {user, token} 
+      user,
+      token
     })
   } catch (error) {
     error.statusCode = 400
@@ -20,7 +21,8 @@ const login = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Login successful",
-      data: {user, token}
+      user,
+      token
     })
 
   } catch (error) {
