@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { askAI } from "./ai.controller.js";
+const express = require("express");
+const { askAI } = require("./ai.controller");
 
-const router = Router();
+const router = express.Router();
 
 router.post("/ask", askAI);
 
-export default router;
+module.exports = router;
