@@ -1,20 +1,26 @@
 const axios = require("axios");
 
 async function generateAIResponse(subject, topic, mode) {
-  const prompt = `
-Generate ${mode} questions for:
+  const prompt = `Generate ${mode} questions for:
 Subject: ${subject}
 Topic: ${topic}
 `;
 
-  const result = await axios.post(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateText?key=" + process.env.GEMINI_API_KEY,
-    {
-      prompt: { text: prompt }
-    }
-  );
+  const url =
+    "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" +
+    process.env.GEMINI_API_KEY;
 
-  return result.data;
+  const body = {
+    contents: [
+      {
+        parts: [{ text: prompt }]
+      }
+    ]
+  };
+
+  const response = await axios.post(url, body);
+
+  return response.data;
 }
 
 module.exports = { generateAIResponse };
