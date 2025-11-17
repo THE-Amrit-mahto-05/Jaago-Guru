@@ -123,11 +123,12 @@ export default function Dashboard() {
             </div>
 
             <button
-              onClick={() => navigate("/interview")}
-              className="mt-6 md:mt-0 px-6 py-3 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-200 transition"
-            >
-              Start Interview →
-            </button>
+        onClick={() => navigate("/interview")}
+        className="mt-6 md:mt-0 px-6 py-3 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-200 transition"
+       >
+      Start Interview →
+      </button>
+
 
           </div>
         </div>
