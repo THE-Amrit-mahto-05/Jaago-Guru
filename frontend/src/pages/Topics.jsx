@@ -42,14 +42,14 @@ export default function Topics() {
             <div
               key={index}
               onClick={() =>
-                navigate(`/interview/quiz?subject=${subject}&topic=${topic}`)
+                navigate(`/interview/quiz-mode?subject=${subject}&topic=${topic}`)
               }
               className="cursor-pointer p-6 rounded-2xl shadow-lg text-white 
                 bg-gradient-to-br from-indigo-500 to-indigo-700
                 hover:scale-[1.05] hover:shadow-2xl transition transform"
             >
               <h2 className="text-xl font-semibold">{topic}</h2>
-              <p className="text-sm opacity-80 mt-1">Tap to view questions</p>
+              <p className="text-sm opacity-80 mt-1">Tap to choose mode</p>
             </div>
           ))}
         </div>
