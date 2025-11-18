@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Subjects from "./pages/Subjects"; 
+import Topics from "./pages/Topics";
 
 function App() {
   return (
@@ -22,14 +23,24 @@ function App() {
             </ProtectedRoute>
           }
         />
-      <Route
-        path="/interview"
-        element={
-          <ProtectedRoute>
-             <Subjects />
-          </ProtectedRoute>
-        }
-      />
+
+        <Route
+          path="/interview"
+          element={
+            <ProtectedRoute>
+              <Subjects />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interview/topics/:subject"
+          element={
+            <ProtectedRoute>
+              <Topics />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

@@ -1,14 +1,15 @@
-import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../api";
 
 export default function Topics() {
+  const { subject } = useParams();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
-  const subject = pathname.split("/")[2];  
-  const readableSubject =
-    subject.charAt(0).toUpperCase() + subject.slice(1).replace("-", " ");
+  const readableSubject = subject
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,6 @@ export default function Topics() {
         setLoading(false);
       }
     }
-
     fetchTopics();
   }, [subject]);
 
