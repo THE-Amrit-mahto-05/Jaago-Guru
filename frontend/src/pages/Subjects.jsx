@@ -1,4 +1,6 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { 
   Code2, 
   Palette, 
@@ -31,6 +33,7 @@ const deepFreeze = (obj) => {
 
 export default function Subjects() {
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const navigate = useNavigate(); 
 
   const categories = useMemo(
     () =>
@@ -81,10 +84,10 @@ export default function Subjects() {
   );
 
   const allCategories = useMemo(() => {
-    return Object.keys(categories).map((name) => ({
-      name,
-      slug: slugify(name),
-      topics: categories[name],
+  return Object.keys(categories).map((name) => ({
+  name,
+  slug: slugify(name),
+  topics: categories[name],
     }));
   }, [categories]);
 
@@ -104,33 +107,28 @@ export default function Subjects() {
     return icons[cat] || <Code2 {...iconProps} />;
   };
 
-  const handleTopicClick = (topic) => {
-    alert(`Navigate to quiz for: ${topic}`);
+  const handleTopicClick = (categoryName, topic) => {
+    const subjectSlug = slugify(categoryName);
+    navigate(`/interview/quiz?subject=${subjectSlug}&topic=${encodeURIComponent(topic)}`);
   };
 
   return (
-    <div className=" min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex">
-      {/* Sidebar */}
-      <Sidebar />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex">
+    <Sidebar />
+    <main className="flex-1 p-8 overflow-y-auto">
+    <div className="max-w-7xl mx-auto">
+    <div className="mb-8">
+    <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+      Interview Topics
+    </h1>
+      <p className="text-xl text-gray-600 mt-4">
+           Select a category to explore topics and start your preparation
+        </p>
+        </div>
 
-      {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
-        <div className="max-w-7xl mx-auto">
-
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              Interview Topics
-            </h1>
-            <p className="text-xl text-gray-600 mt-4">
-              Select a category to explore topics and start your preparation
-            </p>
-          </div>
-
-          {/* Categories */}
-          <div className="space-y-4">
-            {allCategories.map((category, idx) => (
-              <div
+        <div className="space-y-4">
+          {allCategories.map((category, idx) => (
+            <div
                 key={category.slug}
                 className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 overflow-hidden transition-all duration-300"
                 style={{
@@ -139,7 +137,7 @@ export default function Subjects() {
                   opacity: 0,
                 }}
               >
-                {/* Category Header */}
+
                 <button
                   onClick={() =>
                     setExpandedCategory(
@@ -174,7 +172,6 @@ export default function Subjects() {
                   </div>
                 </button>
 
-                {/* Topics */}
                 <div
                   className={`transition-all duration-300 overflow-hidden ${
                     expandedCategory === category.slug
@@ -187,7 +184,7 @@ export default function Subjects() {
                       {category.topics.map((topic, topicIdx) => (
                         <div
                           key={topicIdx}
-                          onClick={() => handleTopicClick(topic)}
+                          onClick={() => handleTopicClick(category.name, topic)}
                           className="group cursor-pointer p-4 rounded-xl bg-gradient-to-br from-gray-50 to-blue-50 border border-gray-200 hover:border-blue-300 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 relative overflow-hidden"
                         >
                           <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
@@ -195,7 +192,6 @@ export default function Subjects() {
                             <span className="font-medium text-gray-700 group-hover:text-white transition-colors">
                               {topic}
                             </span>
-                
                           </div>
                         </div>
                       ))}
