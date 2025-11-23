@@ -34,15 +34,6 @@ function App() {
         />
 
         <Route
-        path="/interview/topics/:subject"
-        element={
-      <ProtectedRoute>
-        <Topics />
-      </ProtectedRoute>
-        }/>
-
-
-        <Route
           path="/interview/quiz-mode"
           element={
             <ProtectedRoute>

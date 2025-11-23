@@ -38,8 +38,6 @@ export default function Subjects() {
     localStorage.removeItem("token");
     navigate("/login");
   };
-
-  /** CATEGORY DATA **/
   const categories = useMemo(
     () =>
       deepFreeze({
@@ -175,19 +173,6 @@ export default function Subjects() {
           "High Availability",
           "CAP Theorem",
         ],
-
-        Tools: [
-          "Git",
-          "GitHub",
-          "Postman",
-          "Swagger",
-          "Playwright",
-          "Cypress",
-          "Selenium",
-          "VS Code",
-          "Makefiles",
-          "Jira",
-        ],
       }),
     []
   );
@@ -246,7 +231,8 @@ export default function Subjects() {
   {activeCategory && (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {filtered.map((s) => (
-    <div key={s.slug} onClick={() => navigate(`/interview/topics/${s.slug}`)} 
+    <div key={s.slug}onClick={() =>
+    navigate(`/interview/quiz-mode?subject=${s.slug}&topic=${s.slug}`)} 
     className="cursor-pointer p-6 rounded-xl shadow-lg bg-gradient-to-br from-indigo-500 to-indigo-700 text-white hover:scale-[1.05] transition">
     <h2 className="text-xl font-semibold">{s.name}</h2>
     <p className="text-sm opacity-80 mt-1"> Tap to view generated topics
