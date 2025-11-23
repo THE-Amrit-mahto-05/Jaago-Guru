@@ -40,10 +40,8 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex">
       <Sidebar/>
-      {/* Main Content */}
       <main className="flex-1 p-6 overflow-auto">
 
-        {/* Top Navbar */}
         <div className="flex items-center justify-between mb-8" style={{ animation: 'fadeInDown 0.6s ease-out' }}>
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -69,7 +67,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           
           <div 
@@ -137,11 +134,9 @@ export default function Dashboard() {
 
         </div>
 
-        {/* CTA Section */}
         <div className="mb-10" style={{ animation: 'fadeInUp 0.6s ease-out 0.4s both' }}>
           <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-10 rounded-3xl shadow-2xl overflow-hidden group">
             
-            {/* Animated background elements */}
             <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full -ml-32 -mt-32 group-hover:scale-150 transition-transform duration-700"></div>
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mb-48 group-hover:scale-150 transition-transform duration-700"></div>
             
@@ -167,7 +162,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Recent Activity */}
         <div style={{ animation: 'fadeInUp 0.6s ease-out 0.5s both' }}>
           <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Recent Attempts

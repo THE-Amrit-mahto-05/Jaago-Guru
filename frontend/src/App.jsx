@@ -33,6 +33,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/interview/quiz"
           element={
@@ -41,6 +42,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/interview/quiz/play"
           element={
