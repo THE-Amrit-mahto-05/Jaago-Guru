@@ -17,9 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        <Route
-          path="/dashboard"
-          element={
+        <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
@@ -36,13 +34,13 @@ function App() {
         />
 
         <Route
-          path="/interview/topics/:subject"
-          element={
-            <ProtectedRoute>
-              <Topics />
-            </ProtectedRoute>
-          }
-        />
+        path="/interview/topics/:subject"
+        element={
+      <ProtectedRoute>
+        <Topics />
+      </ProtectedRoute>
+        }/>
+
 
         <Route
           path="/interview/quiz-mode"
