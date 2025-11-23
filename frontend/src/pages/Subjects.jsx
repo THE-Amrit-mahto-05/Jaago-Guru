@@ -1,89 +1,295 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 
+const slugify = (s) =>
+  s
+    .toLowerCase()
+    .replace(/\+\+/g, "plusplus") 
+    .replace(/[+]/g, "plus")      
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const deepFreeze = (obj) => {
+  Object.keys(obj).forEach((key) => {
+    if (typeof obj[key] === "object") deepFreeze(obj[key]);
+  });
+  return Object.freeze(obj);
+};
+
 export default function Subjects() {
-const [user, setUser] = useState(null);
-const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [selected, setSelected] = useState([]);
+  const [query, setQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState(null);
+  const navigate = useNavigate();
 
-useEffect(() => {
-api.get("/auth/profile")
-.then((res) => setUser(res.data.user))
-.catch(() => {
-localStorage.removeItem("token");
-navigate("/login");
-});
-  }, []);
+  useEffect(() => {
+  api
+  .get("/auth/profile")
+  .then((res) => setUser(res.data.user))
+  .catch(() => {
+  localStorage.removeItem("token");
+  navigate("/login");
+  });
+  }, [navigate]);
 
-const logout = () => {
-localStorage.removeItem("token");
-navigate("/login");
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
-const subjects = [
-    { name: "DSA", slug: "dsa", color: "from-blue-500 to-blue-700" },
-    { name: "MERN Stack", slug: "mern-stack", color: "from-green-500 to-emerald-700" },
-    { name: "System Design", slug: "system-design", color: "from-purple-500 to-purple-700" },
-    { name: "HR Interview", slug: "hr", color: "from-pink-500 to-rose-600" },
-    { name: "Aptitude", slug: "aptitude", color: "from-yellow-500 to-orange-600" },
-  ];
+  const categories = useMemo(
+    () =>
+    deepFreeze({
+  "Programming Languages": [
+    "C++",
+    "C#",
+    "Java",
+    "Python",
+    "Go",
+    "Rust",
+    "Swift",
+    "JavaScript",
+    "TypeScript"
+  ],
 
-return (
+  "Frontend Development": [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "React",
+    "Next.js",
+    "AngularJS",
+    "Vue.js",
+    "Redux",
+    "Zustand",
+    "Storybook",
+    "Tailwind CSS",
+    "Bootstrap",
+    "Framer Motion",
+    "Responsive Design",
+    "Accessibility",
+    "SPA vs MPA",
+    "Web APIs",
+    "DOM Manipulation"
+  ],
+
+  "Backend Development": [
+    "Node.js",
+    "Express.js",
+    "Python Django",
+    "Python Flask",
+    "FastAPI",
+    "Java Spring Boot",
+    "PHP",
+    "Laravel",
+    "Ruby on Rails",
+    "Microservices",
+    "REST APIs",
+    "GraphQL",
+    "Authentication",
+    "Authorization",
+    "JWT",
+    "Caching",
+    "Rate Limiting",
+    "API Gateways"
+  ],
+
+  "Databases": [
+    "MySQL",
+    "PostgreSQL",
+    "MongoDB",
+    "Redis",
+    "SQLite",
+    "Database Indexing",
+    "Joins",
+    "Transactions",
+    "ORM",
+    "Normalization",
+    "NoSQL",
+    "Elasticsearch"
+  ],
+
+  "Cybersecurity": [
+    "Network Security",
+    "Encryption",
+    "Authentication",
+    "Authorization",
+    "Vulnerability Testing",
+    "Penetration Testing",
+    "OWASP Top 10",
+    "XSS",
+    "SQL Injection",
+    "TLS/SSL"
+  ],
+
+  "Mobile Development": [
+    "React Native",
+    "Flutter",
+    "Swift",
+    "Kotlin",
+    "Mobile UI/UX",
+    "API Integration",
+    "App Deployment"
+  ],
+
+  "Data & Analytics": [
+    "NumPy",
+    "Pandas",
+    "Excel",
+    "Power BI",
+    "Tableau",
+    "Data Visualization",
+    "ETL Pipeline",
+    "Data Cleaning",
+    "Hadoop HDFS",
+    "Spark Basics"
+  ],
+
+  "AI / Machine Learning": [
+    "ML Algorithms",
+    "Deep Learning",
+    "TensorFlow",
+    "PyTorch",
+    "LLMs",
+    "LangChain",
+    "Vector Databases",
+    "Hugging Face",
+    "Prompt Engineering",
+    "Data Preprocessing",
+    "Model Evaluation"
+  ],
+
+  "System Design": [
+    "Load Balancing",
+    "Caching",
+    "Message Queues",
+    "Distributed Systems",
+    "Kafka",
+    "RabbitMQ",
+    "Scalability",
+    "Sharding",
+    "CDN",
+    "High Availability",
+    "CAP Theorem"
+  ],
+
+  "Tools": [
+    "Git",
+    "GitHub",
+    "Postman",
+    "Swagger",
+    "Playwright",
+    "Cypress",
+    "Selenium",
+    "VS Code",
+    "Makefiles",
+    "Jira"
+  ]
+}
+),
+    []
+  );
+
+  const subjects = useMemo(() => {
+  if (!activeCategory) return [];
+  return categories[activeCategory].map((name) => ({
+  name,
+  slug: slugify(name)
+    }));
+  },[activeCategory, categories]);
+
+  const filtered = subjects.filter((s) =>
+  s.name.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const toggleSelect = (slug) => {
+  setSelected((prev) =>
+  prev.includes(slug)
+  ? prev.filter((s) => s !== slug)
+  : [...prev, slug]
+    );
+  };
+
+  const startPractice = () => {
+  if (selected.length === 0) return alert("Select at least one topic");
+  navigate(`/interview/topics?subjects=${selected.join(",")}`);
+  };
+
+  return (
     <div className="min-h-screen bg-gray-100 flex">
-      <aside className="w-64 bg-white shadow-lg hidden md:flex flex-col">
-      <div className="p-6 border-b">
-      <h2 className="text-2xl font-bold text-blue-600">AI Prep</h2>
-      </div>
-      <nav className="flex-1 p-6 space-y-4">
-      <button onClick={() => navigate("/dashboard")} className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-200 transition" >
-        Dashboard
+    <aside className="w-64 bg-white shadow-lg hidden md:flex flex-col">
+    <div className="p-6 border-b">
+    <h2 className="text-2xl font-bold text-blue-600">AI Prep</h2>
+    </div>
+
+    <nav className="flex-1 p-6 space-y-2">
+    <button
+    onClick={() => navigate("/dashboard")}
+    className="w-full text-left px-4 py-2 rounded-lg bg-gray-300">
+      ◀ Back
+    </button>
+
+    {Object.keys(categories).map((cat) => (
+    <button key={cat} onClick={() => {
+    setSelected([]);
+    setQuery("");
+    setActiveCategory(cat); 
+     }}
+      className={`w-full text-left px-4 py-2 rounded-lg transition ${
+      activeCategory === cat? "bg-blue-600 text-white": "hover:bg-gray-200"}`}
+      >
+      {cat}
       </button>
-      <button onClick={() => navigate("/interview")} className="w-full text-left px-4 py-2 rounded-lg bg-blue-50 text-blue-600 font-medium">
-        Start Interview
-      </button>
-      <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-200 transition">
-        My Attempts
-      </button>
-      <button className="w-full text-left px-4 py-2 rounded-lg hover:bg-gray-200 transition">
-        Settings
-      </button>
+      ))}
       </nav>
+
         <div className="p-6 border-t">
-          <button
-          onClick={logout}
-          className="w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-          >
-          Logout
-          </button>
+        <button onClick={logout}
+            className="w-full py-2 bg-red-500 text-white rounded-lg">
+            Logout
+        </button>
         </div>
-      </aside>
+        </aside>
+        <main className="flex-1 p-6">
+        <h1 className="text-3xl font-bold mb-4">
+          {activeCategory || "Select a Category"}
+        </h1>
 
-      <main className="flex-1 p-6">
-        <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Subjects</h1>
-        <div className="flex items-center gap-3">
-        <p className="font-medium text-gray-600">
-              {user ? user.email : "Loading..."}
-        </p>
-        <img src="https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff"
-              className="w-10 h-10 rounded-full" />
-        </div>
-        </div>
+        {activeCategory && (
+          <input
+            type="text"
+            placeholder="Search topic..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full p-3 rounded-lg border mb-6"
+          />
+        )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {subjects.map((s) => (
-            <div
-              key={s.name}
-              onClick={() => navigate(`/interview/topics/${s.slug}`)}
-              className={`cursor-pointer p-8 rounded-2xl shadow-xl text-white 
-                bg-gradient-to-br ${s.color}
-                hover:scale-[1.05] hover:shadow-2xl transition transform`}
-            >
-              <h2 className="text-2xl font-semibold">{s.name}</h2>
-              <p className="opacity-80 mt-2 text-sm">Tap to start practicing</p>
-            </div>
-          ))}
-        </div>
+          {activeCategory && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((s) => (
+          <div key={s.slug} onClick={() => toggleSelect(s.slug)}
+          className={`cursor-pointer p-6 rounded-xl shadow-lg bg-gradient-to-br from-indigo-500 to-indigo-700 text-white ${
+          selected.includes(s.slug) ? "ring-4 ring-white" : ""
+          }`}>
+          <h2 className="text-xl font-semibold">{s.name}</h2>
+          </div>
+            ))}
+          </div>
+        )}
+
+        {activeCategory && (
+        <div className="mt-10 flex justify-center">
+        <button onClick={startPractice}
+        className="px-10 py-3 bg-blue-600 text-white text-lg rounded-xl shadow-lg"
+        >
+       Start Practice
+      </button>
+      </div>
+        )}
       </main>
     </div>
   );
