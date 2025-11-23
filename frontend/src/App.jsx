@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
+    <div>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
@@ -52,6 +53,7 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+    </div>
   );
 }
 

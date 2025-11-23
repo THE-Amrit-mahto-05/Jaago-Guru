@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutDashboard, Play, FileText, Settings, LogOut, TrendingUp, Target, Flame, Award, ArrowRight } from "lucide-react";
+import { FileText, TrendingUp, Target, Flame, Award, ArrowRight } from "lucide-react";
 import api from "../api";
+import Sidebar from "../components/sidebar.jsx";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch logged-in user profile
   useEffect(() => {
     api.get("/auth/profile")
       .then((res) => {
@@ -39,66 +39,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex">
-
-      {/* Sidebar */}
-      <aside className="w-64 bg-white/80 backdrop-blur-lg shadow-xl hidden md:flex flex-col border-r border-gray-200/50">
-        <div className="p-6 border-b border-gray-200/50">
-          <div className="flex items-center gap-2 animate-fade-in">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">AI</span>
-            </div>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              AI Prep
-            </h2>
-          </div>
-        </div>
-
-        <nav className="flex-1 p-6 space-y-2">
-          <button
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium shadow-lg transform hover:scale-105 transition-all duration-300"
-            style={{ animation: 'slideInLeft 0.5s ease-out 0.1s both' }}
-          >
-            <LayoutDashboard size={20} />
-            Dashboard
-          </button>
-
-          <button
-            onClick={() => navigate("/interview")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 transition-all duration-300 text-gray-700 hover:text-blue-600 hover:translate-x-1 group"
-            style={{ animation: 'slideInLeft 0.5s ease-out 0.2s both' }}
-          >
-            <Play size={20} className="group-hover:scale-110 transition-transform" />
-            Start Interview
-          </button>
-
-          <button
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-purple-50 transition-all duration-300 text-gray-700 hover:text-purple-600 hover:translate-x-1 group"
-            style={{ animation: 'slideInLeft 0.5s ease-out 0.3s both' }}
-          >
-            <FileText size={20} className="group-hover:scale-110 transition-transform" />
-            My Attempts
-          </button>
-
-          <button
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-pink-50 transition-all duration-300 text-gray-700 hover:text-pink-600 hover:translate-x-1 group"
-            style={{ animation: 'slideInLeft 0.5s ease-out 0.4s both' }}
-          >
-            <Settings size={20} className="group-hover:rotate-90 transition-transform duration-500" />
-            Settings
-          </button>
-        </nav>
-
-        <div className="p-6 border-t border-gray-200/50">
-          <button
-            onClick={logout}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
-          >
-            <LogOut size={20} />
-            Logout
-          </button>
-        </div>
-      </aside>
-
+      <Sidebar/>
       {/* Main Content */}
       <main className="flex-1 p-6 overflow-auto">
 
