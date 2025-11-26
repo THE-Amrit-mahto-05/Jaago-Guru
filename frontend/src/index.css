@@ -1,1 +1,42 @@
 @import "tailwindcss";
+/* Add this to your index.css or App.css file */
+
+/* 1. Mouse-Follow Background Effect */
+/* This creates a "glow" that follows the cursor */
+.mouse-move-bg {
+  position: fixed; /* Sticks to the viewport */
+  inset: 0;
+  z-index: 0; /* Sits behind our content */
+  pointer-events: none; /* Allows clicks to pass through */
+  background-image: radial-gradient(
+    circle 700px at var(--x) var(--y),
+    rgba(59, 130, 246, 0.12),  /* A subtle blue from your theme */
+    rgba(168, 85, 247, 0.08), /* A subtle purple from your theme */
+    transparent 75%
+  );
+  opacity: 0.8;
+}
+
+/* 2. Simple Animation Keyframes */
+/* We will use these with Tailwind's 'animate-...' utility */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
