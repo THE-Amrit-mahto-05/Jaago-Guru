@@ -2,15 +2,11 @@ import React from 'react'
 import { LayoutDashboard, Play, FileText, Settings, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = ({ logout }) => { // Accept logout as a prop
   const navigate = useNavigate();
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
-
-  const logout = () => {
-    console.log("Logout clicked");
-  };
 
   return (
     <div>
@@ -29,7 +25,6 @@ const Sidebar = () => {
 
         <nav className="flex-1 p-6 space-y-2">
           
-          {/* Dashboard Button */}
           <button
             onClick={() => navigate("/dashboard")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium shadow-lg transition-all duration-300
@@ -43,7 +38,6 @@ const Sidebar = () => {
             Dashboard
           </button>
 
-          {/* Start Interview */}
           <button
             onClick={() => navigate("/interview")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium shadow-lg transition-all duration-300
@@ -57,7 +51,6 @@ const Sidebar = () => {
             Start Interview
           </button>
 
-          {/* My Attempts */}
           <button
             onClick={() => navigate("/my-attempts")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium shadow-lg transition-all duration-300
@@ -71,24 +64,24 @@ const Sidebar = () => {
             My Attempts
           </button>
 
-          {/* Settings */}
           <button
+            onClick={() => navigate("/settings")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium shadow-lg transition-all duration-300
               ${isActive("/settings")
                 ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white scale-105"
                 : "bg-white text-gray-700 hover:bg-gray-100"
               }
             `}
-            onClick={() => navigate("/settings")}
           >
             <Settings size={20} />
             Settings
           </button>
         </nav>
 
+        {/* Logout button */}
         <div className="p-6 border-t border-gray-200/50">
           <button
-            onClick={logout}
+            onClick={logout}  // Call the passed logout
             className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
             <LogOut size={20} />
