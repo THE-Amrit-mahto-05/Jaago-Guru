@@ -78,10 +78,9 @@ const Sidebar = ({ logout }) => { // Accept logout as a prop
           </button>
         </nav>
 
-        {/* Logout button */}
         <div className="p-6 border-t border-gray-200/50">
           <button
-            onClick={logout}  // Call the passed logout
+            onClick={logout}
             className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
           >
             <LogOut size={20} />
