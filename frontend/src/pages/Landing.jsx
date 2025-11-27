@@ -57,12 +57,12 @@ export default function Landing() {
     }
   };
 
-  // Calculate 3D tilt based on scroll (starts tilted, becomes flat)
+
   const heroImageTransform = () => {
     const maxScroll = 600;
     const scrollProgress = Math.min(scrollY / maxScroll, 1);
     
-    // Start with more dramatic tilt, flatten on scroll
+
     const rotateX = 35 - (scrollProgress * 35);
     const scale = 0.85 + (scrollProgress * 0.15);
     const translateY = scrollProgress * -30;
