@@ -61,6 +61,7 @@ export default function InterviewSession() {
         });
 
         setTotal(res.data.total);
+        console.log(res.data)
 
         // Now autoplay is allowed because user interacted
         await playTTS(res.data.text);
@@ -556,6 +557,7 @@ export default function InterviewSession() {
               Back
             </button>
           </div>
+          
         </div>
         </div>
 

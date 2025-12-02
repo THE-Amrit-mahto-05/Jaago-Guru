@@ -4,7 +4,7 @@ const cors = require("cors")
 const authRoutes = require("./auth/auth.route")
 const aiRoutes=require("./ai/ai.route.js")
 const interviewRoutes = require("./interview/interview.route")
-const mcqRoutes = require("./mcq.routes");
+const mcqRoutes = require("./mcq/mcq.router.js");
 
 const app = express()
 

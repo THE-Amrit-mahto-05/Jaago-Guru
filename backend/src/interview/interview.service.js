@@ -96,7 +96,7 @@ const fetchNextQuestion = async (interviewId) => {
   if (!next) {
     const summary = await prisma.interviewQuestion.findMany({
       where: { interviewId: Number(interviewId) },
-      orderBy: { index: "asc" },
+      orderBy: { index: "asc" }
     })
 
     return { finished: true, summary }
@@ -113,8 +113,7 @@ const fetchNextQuestion = async (interviewId) => {
 
 const saveUserAnswerAndEvaluate = async ({ interviewId, questionId, answerText }) => {
   const q = await prisma.interviewQuestion.findUnique({
-    where: { id: Number(questionId) },
-    include: { interview: true }
+    where: { id: Number(questionId) }
   })
 
   const evalPrompt = `
