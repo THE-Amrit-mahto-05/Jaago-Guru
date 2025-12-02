@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Mic, MicOff, Volume2, Send, RotateCcw, Sparkles, CircleHelp } from "lucide-react";
+import { Mic, MicOff, Volume2, Send, RotateCcw, Sparkles, CircleHelp, ArrowLeft, CheckCircle, AlertCircle, Wifi } from "lucide-react";
 import api from "../api";
 
 const DG_KEY = import.meta.env.VITE_DEEPGRAM_API_KEY;
@@ -22,6 +22,7 @@ export default function InterviewSession() {
   const [isPlayingTTS, setIsPlayingTTS] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
+  const [showExitPopup, setShowExitPopup] = useState(false);
 
   const wsRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -264,66 +265,109 @@ export default function InterviewSession() {
   // Start Screen
   if (!started) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center p-6">
-        <style>{`
-          @keyframes pulse-glow {
-            0%, 100% { 
-              box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
-                          0 0 40px rgba(59, 130, 246, 0.2);
-            }
-            50% { 
-              box-shadow: 0 0 30px rgba(59, 130, 246, 0.5),
-                          0 0 60px rgba(59, 130, 246, 0.3);
-            }
-          }
-          @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-          }
-          @keyframes fade-in {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          .animate-pulse-glow {
-            animation: pulse-glow 3s ease-in-out infinite;
-          }
-          .animate-float {
-            animation: float 3s ease-in-out infinite;
-          }
-          .animate-fade-in {
-            animation: fade-in 0.5s ease-out;
-          }
-        `}</style>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="max-w-3xl w-full">
 
-        <div className="text-center max-w-2xl animate-fade-in">
-          <div className="mb-8 inline-block animate-float">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-200">
-              <Sparkles className="text-white" size={48} />
+          {/* Header Card */}
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-8 mb-6">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Mic className="text-white" size={32} strokeWidth={2} />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                  AI Voice Interview Session
+                </h1>
+                <p className="text-slate-600">
+                  Please review the requirements below before starting
+                </p>
+              </div>
             </div>
           </div>
 
-          <h1 className="text-5xl font-bold text-slate-900 mb-4">
-            Ready to Ace Your Interview?
-          </h1>
+          {/* Pre-Interview Checklist */}
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-lg font-bold text-slate-900 mb-4">Pre-Interview Checklist</h2>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <CheckCircle className="text-blue-600" size={16} />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Microphone Access</p>
+                  <p className="text-sm text-slate-600">Ensure your microphone is connected and browser permissions are granted</p>
+                </div>
+              </div>
 
-          <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-            Take a deep breath. We'll guide you through this step by step.
-            Click below when you're ready to begin.
-          </p>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Volume2 className="text-blue-600" size={16} />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Use Headphones (Recommended)</p>
+                  <p className="text-sm text-slate-600">Headphones prevent audio feedback and provide better sound quality</p>
+                </div>
+              </div>
 
-          <button
-            onClick={() => setStarted(true)}
-            className="group px-10 py-5 bg-blue-600 text-white text-lg font-bold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-blue-700 transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse-glow"
-          >
-            <span className="flex items-center gap-3">
-              Start Interview
-              <Sparkles className="group-hover:rotate-12 transition-transform" size={24} />
-            </span>
-          </button>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <AlertCircle className="text-blue-600" size={16} />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Quiet Environment</p>
+                  <p className="text-sm text-slate-600">Find a quiet space to minimize background noise and distractions</p>
+                </div>
+              </div>
 
-          <p className="mt-6 text-sm text-slate-500">
-            Make sure your microphone is connected and working
-          </p>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Wifi className="text-blue-600" size={16} />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Stable Internet Connection</p>
+                  <p className="text-sm text-slate-600">Required for real-time voice transcription and processing</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* How It Works */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+            <h2 className="text-lg font-bold text-slate-900 mb-3">How It Works</h2>
+            <ol className="space-y-2 text-sm text-slate-700">
+              <li className="flex gap-2">
+                <span className="font-semibold text-blue-600">1.</span>
+                <span>Listen to each question read aloud by our AI interviewer</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-blue-600">2.</span>
+                <span>Click "Start Recording" and speak your answer clearly</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-blue-600">3.</span>
+                <span>Review the transcribed answer and submit to continue</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-blue-600">4.</span>
+                <span>Receive detailed feedback and analysis after completing all questions</span>
+              </li>
+            </ol>
+          </div>
+
+          {/* Start Button */}
+          <div className="text-center">
+            <button
+              onClick={() => setStarted(true)}
+              className="px-12 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+            >
+              <Mic size={20} />
+              Begin Interview Session
+            </button>
+            <p className="mt-4 text-sm text-slate-500">
+              Click the button above when you're ready to start
+            </p>
+          </div>
+
         </div>
       </div>
     );
@@ -362,67 +406,36 @@ export default function InterviewSession() {
   }
 
   // Main Interview Screen
+  if (!question) {
+    return null; // Safety check
+  }
+
   const progress = ((question.index) / total) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
-      <style>{`
-        @keyframes recording-pulse {
-          0%, 100% { 
-            transform: scale(1);
-            opacity: 1;
-          }
-          50% { 
-            transform: scale(1.2);
-            opacity: 0.8;
-          }
-        }
-        @keyframes wave {
-          0%, 100% { transform: scaleY(0.5); }
-          50% { transform: scaleY(1); }
-        }
-        @keyframes slide-up {
-          from { 
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to { 
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-recording {
-          animation: recording-pulse 1.5s ease-in-out infinite;
-        }
-        .wave-bar {
-          animation: wave 1s ease-in-out infinite;
-        }
-        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
-        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
-        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
-        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
-        .slide-up {
-          animation: slide-up 0.5s ease-out;
-        }
-      `}</style>
-
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-slate-50 p-6 relative">
+      <div className="max-w-5xl mx-auto">
 
         {/* Header with Progress */}
-        <div className="mb-8 slide-up">
-          <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-6">
+        <div className="mb-6">
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h1 className="text-3xl font-bold text-slate-900">Interview Session</h1>
-                <p className="text-sm text-blue-600 font-medium mt-1">
-                  Question {question.index}
+                <h1 className="text-2xl font-bold text-slate-900">Interview Session</h1>
+                <p className="text-sm text-slate-600 mt-1">
+                  Question {question.index} of {total}
                 </p>
               </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-blue-600">{Math.round(progress)}%</div>
+                <p className="text-xs text-slate-500">Complete</p>
+              </div>
             </div>
+
             {/* Progress Bar */}
-            <div className="w-full bg-blue-100 rounded-full h-3 overflow-hidden">
+            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-700 ease-out shadow-lg"
+                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -430,54 +443,53 @@ export default function InterviewSession() {
         </div>
 
         {/* Question Card */}
-        <div className="mb-6 slide-up" style={{ animationDelay: '0.1s' }}>
-          <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
+        <div className="mb-6">
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
             <div className="flex items-start gap-4 mb-6">
-              <div className="relative flex-shrink-0">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 transform transition-transform duration-300 hover:scale-110">
-                  <CircleHelp className="text-white" size={28} strokeWidth={2.5} />
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <CircleHelp className="text-white" size={24} strokeWidth={2} />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
               </div>
 
               <div className="flex-1">
-                <h2 className="text-sm font-semibold text-blue-600 mb-2 uppercase tracking-wide">
-                  Current Question
+                <h2 className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wider">
+                  Question {question.index}
                 </h2>
-                <p className="text-2xl font-semibold text-slate-900 leading-relaxed">
+                <p className="text-xl font-semibold text-slate-900 leading-relaxed">
                   {question.text}
                 </p>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 mb-4">
               <button
                 onClick={() => playTTS(question.text)}
                 disabled={isPlayingTTS}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-md transition-all duration-300 ${isPlayingTTS
-                  ? "bg-blue-100 text-blue-600 cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:scale-105 active:scale-95"
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium border-2 transition-colors ${isPlayingTTS
+                  ? "bg-blue-50 border-blue-200 text-blue-600 cursor-not-allowed"
+                  : "bg-white border-slate-300 text-slate-700 hover:border-blue-500 hover:text-blue-600"
                   }`}
               >
-                <Volume2 size={20} className={isPlayingTTS ? "animate-pulse" : ""} />
+                <Volume2 size={18} />
                 {isPlayingTTS ? "Playing..." : "Play Question"}
               </button>
 
               {!isRecording ? (
                 <button
                   onClick={startRecording}
-                  className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-xl font-semibold shadow-md hover:bg-red-600 hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
                 >
-                  <Mic size={20} />
+                  <Mic size={18} />
                   Start Recording
                 </button>
               ) : (
                 <button
                   onClick={stopRecording}
-                  className="flex items-center gap-2 px-6 py-3 bg-slate-700 text-white rounded-xl font-semibold shadow-md hover:bg-slate-800 hover:shadow-lg transition-all duration-300"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-slate-700 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors"
                 >
-                  <MicOff size={20} className="animate-recording" />
+                  <MicOff size={18} />
                   Stop Recording
                 </button>
               )}
@@ -487,81 +499,123 @@ export default function InterviewSession() {
                   cleanupRecording();
                   startRecording();
                 }}
-                className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-blue-200 text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 hover:border-blue-300"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:border-slate-400 transition-colors"
               >
-                <RotateCcw size={20} />
+                <RotateCcw size={18} />
                 Record Again
               </button>
             </div>
 
             {/* Recording Indicator */}
             {isRecording && (
-              <div className="mt-6 flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-1 h-8 bg-red-500 rounded-full wave-bar"
-                    ></div>
-                  ))}
-                </div>
-                <span className="text-red-600 font-semibold">Recording in progress...</span>
+              <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                <span className="text-red-700 font-semibold text-sm">Recording in progress...</span>
               </div>
             )}
           </div>
         </div>
 
         {/* Answer Card */}
-        <div className="slide-up" style={{ animationDelay: '0.2s' }}>
-          <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
-            <h3 className="text-sm font-semibold text-blue-600 mb-4 uppercase tracking-wide">
+        <div className="mb-6">
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
+            <h3 className="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider">
               Your Answer
             </h3>
 
             <textarea
-              className="w-full h-48 border-2 border-blue-100 rounded-xl p-4 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all duration-300 resize-none"
-              placeholder="Your answer will appear here as you speak..."
+              className="w-full h-40 border-2 border-slate-200 rounded-lg p-4 text-slate-900 focus:border-blue-500 focus:outline-none transition-colors resize-none font-mono text-sm"
+              placeholder="Your spoken answer will appear here..."
               value={(finalText + " " + partial).trim()}
               onChange={(e) => setFinalText(e.target.value)}
             />
 
             {error && (
-              <div className="mt-4 bg-red-50 border border-red-200 rounded-xl p-4">
-                <p className="text-red-600 font-medium">{error}</p>
+              <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-red-700 font-medium text-sm">{error}</p>
               </div>
             )}
 
             <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm text-slate-500">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>Auto-transcription enabled</span>
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Live transcription active</span>
               </div>
 
               <button
                 onClick={submitAnswer}
                 disabled={isSaving}
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${isSaving
+                  ? "bg-slate-300 cursor-not-allowed text-slate-500"
+                  : "bg-green-600 text-white hover:bg-green-700"
+                  }`}
               >
-                {isSaving ? "Saving..." : "Save & Next"}
+                {isSaving ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Send size={18} />
+                    Save & Next Question
+                  </>
+                )}
               </button>
             </div>
-          
-
-          <div className="mt-4">
-            <button
-              onClick={() => {
-                navigate(-1)
-              }}
-              className="px-4 py-2 bg-gray-400 text-white rounded"
-            >
-              Back
-            </button>
           </div>
-          
-        </div>
         </div>
 
       </div>
+
+      {/* Back Button - Top Left */}
+      <button
+        onClick={() => setShowExitPopup(true)}
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:border-slate-400 transition-colors"
+      >
+        <ArrowLeft size={18} />
+        Exit Interview
+      </button>
+
+      {/* Exit Confirmation Popup */}
+      {showExitPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-[9999]">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowExitPopup(false)}
+          />
+
+          {/* Modal */}
+          <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md z-50 border border-slate-200">
+            <div className="mb-6">
+              <div className="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <ArrowLeft className="text-red-600" size={28} />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 text-center">Exit Interview?</h2>
+              <p className="text-slate-600 mt-3 text-center">
+                Are you sure you want to exit? Your current progress may not be saved.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowExitPopup(false)}
+                className="flex-1 px-6 py-3 rounded-lg bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => navigate(-1)}
+                className="flex-1 px-6 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors"
+              >
+                Yes, Exit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
