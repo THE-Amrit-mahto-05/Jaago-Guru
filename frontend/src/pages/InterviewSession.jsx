@@ -20,12 +20,26 @@ export default function InterviewSession() {
   const [finalText, setFinalText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isPlayingTTS, setIsPlayingTTS] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
 
   const wsRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
+  const ttsAudioRef = useRef(null);
 
+  useEffect(() => {
+    return () => {
+      cleanupRecording();
+      if (ttsAudioRef.current) {
+        ttsAudioRef.current.pause();
+        ttsAudioRef.current.currentTime = 0;
+        ttsAudioRef.current = null;
+      }
+    };
+  }, []);
+
+  // ----------------------------
   // Load first question AFTER user clicks Start Interview
   useEffect(() => {
     if (!started) return;
@@ -47,7 +61,6 @@ export default function InterviewSession() {
         });
 
         setTotal(res.data.total);
-        console.log(res.data);
 
         // Now autoplay is allowed because user interacted
         await playTTS(res.data.text);
@@ -75,7 +88,7 @@ export default function InterviewSession() {
 
       setIsPlayingTTS(true);
 
-      const url = `${DG_TTS_URL}?model=aura-asteria-en`;
+      const url = `${DG_TTS_URL}?model=aura-2-odysseus-en`;
 
       const resp = await fetch(url, {
         method: "POST",
@@ -96,6 +109,7 @@ export default function InterviewSession() {
       const blob = await resp.blob();
       const audioURL = URL.createObjectURL(blob);
       const audio = new Audio(audioURL);
+      ttsAudioRef.current = audio
 
       audio.onended = () => {
         URL.revokeObjectURL(audioURL);
@@ -121,12 +135,18 @@ export default function InterviewSession() {
     }
 
     try {
+      if (ttsAudioRef.current) {
+        ttsAudioRef.current.pause();
+        ttsAudioRef.current.currentTime = 0;
+        ttsAudioRef.current = null;
+        setIsPlayingTTS(false);
+      }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
       // AUTH IS VIA SUBPROTOCOL: ["token", API_KEY]
       const ws = new WebSocket(
-        "wss://api.deepgram.com/v1/listen?model=nova-2&language=en-US&punctuate=true&interim_results=true",
+        "wss://api.deepgram.com/v1/listen?model=nova-3&language=en-US&punctuate=true&interim_results=true",
         ["token", DG_KEY]
       );
 
@@ -211,6 +231,8 @@ export default function InterviewSession() {
     }
 
     try {
+      setIsSaving(true)
+
       const res = await api.post(`/interview/${interviewId}/answer`, {
         questionId: question.questionId,
         answerText: answer,
@@ -225,11 +247,16 @@ export default function InterviewSession() {
       setQuestion(next);
       setFinalText("");
       setPartial("");
+      setTotal(next.total)
 
       await playTTS(next.text);
-    } catch (err) {
+    }
+    catch (err) {
       console.error("Submit error:", err);
       setError("Failed to save.");
+    }
+    finally {
+      setIsSaving(false);
     }
   }
 
@@ -511,13 +538,25 @@ export default function InterviewSession() {
 
               <button
                 onClick={submitAnswer}
-                className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
+                disabled={isSaving}
+                className="px-4 py-2 bg-green-600 text-white rounded"
               >
-                <Send size={20} />
-                Save & Next Question
+                {isSaving ? "Saving..." : "Save & Next"}
               </button>
             </div>
+          
+
+          <div className="mt-4">
+            <button
+              onClick={() => {
+                navigate(-1)
+              }}
+              className="px-4 py-2 bg-gray-400 text-white rounded"
+            >
+              Back
+            </button>
           </div>
+        </div>
         </div>
 
       </div>
