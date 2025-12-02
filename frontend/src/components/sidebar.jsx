@@ -33,7 +33,7 @@ const Sidebar = ({ logout }) => {
 
         <SidebarItem
           icon={<Play size={20} />}
-          label="Start Interview"
+          label="Interview (MCQ)"
           active={isActive("/interview")}
           onClick={() => navigate("/interview")}
         />

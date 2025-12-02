@@ -9,30 +9,36 @@ async function askAI(req, res) {
     }
 
     let prompt = `
-      Generate ${mode} interview questions.
-      Subject: ${subject}
-      Topic: ${topic}
-    `;
+You are an expert interview question generator.
+Generate exactly 10 ${mode.toUpperCase()} interview questions.
+Subject: ${subject}
+Topic: ${topic}
+`;
 
     if (mode === "mcq") {
-  prompt += `
-    Format strictly like this for MCQs:
+      prompt += `
+STRICT MCQ FORMAT (follow EXACTLY):
 
-    1. Question text
-    a) Option 1
-    b) Option 2
-    c) Option 3
-    d) Option 4
-    Answer: <letter of correct option>
+1. Question text?
+a) Option 1
+b) Option 2
+c) Option 3
+d) Option 4
+Answer: a
 
-    Important:
-    - Always provide 4 options per question.
-    - No extra text, explanation, or numbering errors.
-    - Separate each question with a blank line.
-  `;
-}
- else {
-      prompt += `Provide clean structured output suitable for ${mode} mode.`;
+RULES:
+- ALWAYS generate EXACTLY 10 questions.
+- ALWAYS generate EXACTLY 4 options: a, b, c, d.
+- DO NOT add explanations.
+- DO NOT add extra text like "Sure, here are your questions".
+- Leave ONE blank line between questions.
+- Questions MUST be numbered 1–10 only.
+`;
+    } 
+    else {
+      prompt += `
+Provide clean structured output suitable for ${mode} mode.
+`;
     }
 
     const response = await generateAIResponse(subject, topic, prompt);
@@ -40,7 +46,7 @@ async function askAI(req, res) {
     res.json({ success: true, data: response });
   } catch (err) {
     console.error("AI Error:", err.response?.data || err);
-    res.status(500).json({ success: false, message: err.response?.data || "AI error" });
+    res.status(500).json({ success: false, message: "AI error" });
   }
 }
 
@@ -53,9 +59,11 @@ async function getTopics(req, res) {
     }
 
     const prompt = `
-      List the top 10 most important interview topics for the subject: ${subject}.
-      Return ONLY topic names, one per line, no numbering if possible.
-    `;
+List exactly 10 important interview topics for ${subject}.
+Return ONLY topic names.
+One topic per line.
+No numbering.
+`;
 
     const response = await generateAIResponse(subject, "topics", prompt);
 
@@ -63,13 +71,13 @@ async function getTopics(req, res) {
 
     const topics = text
       .split("\n")
-      .map((t) => t.replace(/^\d+\.\s*/, "").trim())
+      .map((t) => t.trim())
       .filter(Boolean);
 
     res.json({ success: true, topics });
   } catch (err) {
     console.error("AI Topic Error:", err.response?.data || err);
-    res.status(500).json({ success: false, message: err.response?.data || "AI error" });
+    res.status(500).json({ success: false, message: "AI error" });
   }
 }
 
