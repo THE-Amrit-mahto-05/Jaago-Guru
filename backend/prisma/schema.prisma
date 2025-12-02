@@ -16,6 +16,7 @@ model User {
   password   String
   createdAt  DateTime    @default(now())
   interviews Interview[]
+  mcqs       MCQ[]
 }
 
 model Interview {
@@ -42,4 +43,17 @@ model InterviewQuestion {
   weaknesses   String?
   advice       String?
   createdAt    DateTime  @default(now())
+}
+
+model MCQ {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  subject     String
+  topic       String
+  question    String
+  options     String   
+  answer      String
+  explanation String   
+  createdAt   DateTime @default(now())
 }
