@@ -4,6 +4,7 @@ const cors = require("cors")
 const authRoutes = require("./auth/auth.route")
 const aiRoutes=require("./ai/ai.route.js")
 const interviewRoutes = require("./interview/interview.route")
+const mcqRoutes = require("./mcq.routes");
 
 const app = express()
 
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use('/api/auth', authRoutes)
 app.use("/api/ai", aiRoutes)
 app.use("/api/interview", interviewRoutes)
+app.use("/api/mcq", mcqRoutes);
 
 app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({success: false, message: err.message || 'Something went wrong!', data: null})
