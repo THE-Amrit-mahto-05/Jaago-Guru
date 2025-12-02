@@ -61,7 +61,7 @@ export default function Dashboard() {
             </div>
             <div className="hidden md:block text-right mr-2">
               <p className="text-xs text-slate-400 uppercase font-semibold tracking-wider">Profile</p>
-              <p className="text-sm font-semibold text-slate-700 leading-tight">{user?.email}</p>
+              <p className="text-sm font-semibold text-slate-700 leading-tight">{user.name}</p>
             </div>
           </div>
         </header>
@@ -153,7 +153,7 @@ export default function Dashboard() {
             </div>
 
             <button
-              onClick={() => navigate("/interview")}
+              onClick={() => navigate("/interview/start")}
               className="shrink-0 px-8 py-4 bg-white text-indigo-600 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:bg-indigo-50 hover:scale-105 transition-all duration-300 flex items-center gap-3 group/btn"
             >
               Start Interview
