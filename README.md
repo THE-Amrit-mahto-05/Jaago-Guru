@@ -1,6 +1,6 @@
 # Jaago-Guru: AI Interview Platform
 
-> An AI-powered web platform that helps users practice interviews, receive intelligent feedback, and track progress — built with React, Node.js, Express, MySQL, and OpenAI API.
+> An AI-powered web platform that helps users practice interviews, receive intelligent feedback, and track progress — built with React, Node.js, Express, Prisma ORM ,Postgresql, and Gemini API.
 
 ---
 
@@ -34,8 +34,7 @@ Build a web platform where users can:
 
 **Add:**
 1. Role-based interviews (e.g., Frontend Developer, Data Analyst)  
-2. Difficulty levels (Easy / Medium / Hard)  
-3. Resume upload → AI generates questions from resume  
+2. Experience levels (Junior / Mid / Intern / senior)  
 4. Analytics dashboard (average score, improvement chart)  
 5. AI summary feedback for full interview  
 
@@ -47,7 +46,6 @@ Build a web platform where users can:
 1. Voice-based interviews (Speech-to-Text + Text-to-Speech)  
 2. Timed responses (simulate real interviews)  
 3. HR-style evaluation (soft skills, tone, confidence)  
-4. Admin panel to manage questions, users, and statistics  
 
 ---
 
@@ -56,13 +54,12 @@ Build a web platform where users can:
 | Layer | Tool | Description |
 |-------|------|-------------|
 | **Frontend** | React.js | Build the user interface |
-| **Styling** | Tailwind CSS / Material UI | Modern, responsive design |
+| **Styling** | Tailwind CSS | Modern, responsive design |
 | **Backend** | Node.js + Express.js | REST API and server logic |
-| **Database** | MySQL | Store users, sessions, and interview data |
-| **AI** | OpenAI API (GPT-4 / 3.5-turbo) | Generate questions and feedback |
-| **Authentication** | JWT or Firebase Auth | Secure login/signup |
-| **Hosting** | Vercel (Frontend), Render (Backend) | Free deployment |
-| **Optional API** | Whisper API | Speech-to-Text for voice interviews |
+| **Database** | postgresql | Store users and interview data |
+| **AI** | Gemini API | Generate questions and feedback | and Deepgram API | for AI interview
+| **Authentication** | JWT or Supabase Auth | Secure login/signup |
+| **Hosting** | Vercel (Frontend), Render (Backend) | 
 
 ---
 
@@ -84,38 +81,46 @@ Build a web platform where users can:
 
 ## 5. API Endpoints
 
-| Endpoint | Method | Description |
-|-----------|---------|-------------|
-| `/api/auth/signup` | POST | Register new user |
-| `/api/auth/login` | POST | Login user |
-| `/api/interview/start` | POST | Start new interview (AI-generated questions) |
-| `/api/interview/answer` | POST | Send answer and receive AI feedback |
-| `/api/interview/history` | GET | Fetch past interviews for user |
-| `/api/interview/details/:id` | GET | Fetch detailed interview data |
+| Endpoint                      | Method | Description                                   | Notes                                             |
+|------------------------------|--------|-----------------------------------------------|--------------------------------------------------|
+| /api/auth/signup             | POST   | Register a new user                          | Validates email/password, stores in DB           |
+| /api/auth/login              | POST   | Login user                                   | Returns JWT token for authentication             |
+| /api/interview/start         | POST   | Start a new AI-generated interview session   | Generates questions using AI (gemini.js)         |
+| /api/interview/answer        | POST   | Send user's answer and receive AI feedback   | Stores answer and returns evaluation             |
+| /api/interview/history       | GET    | Fetch list of past interviews for a user     | Requires authentication                          |
+| /api/interview/details/:id   | GET    | Fetch detailed data of a specific interview  | Includes questions, answers, AI feedback         |
+| /api/mcq/list                | GET    | Fetch MCQs for a subject/topic               | Returns list of questions                        |
+| /api/mcq/submit              | POST   | Submit MCQ answers                           | Calculates score and stores results              |
+| /api/ai/analyze              | POST   | Send text or input for AI analysis           | Returns AI-generated insights or suggestions     |
 
----
 
 ## 6. Frontend Structure
 
-**Main Pages / Components:**
-- `/` → Landing Page  
-- `/login` → Login  
-- `/signup` → Signup  
-- `/dashboard` → User dashboard  
-- `/interview` → Chat-based interview interface  
-- `/results/:id` → Interview results and feedback  
+| Route                      | Component           | Description                                                 |
+|----------------------------|---------------------|-------------------------------------------------------------|
+| /                          | Landing.jsx         | Landing / home page                                         |
+| /login                     | Login.jsx           | Login form for existing users                               |
+| /signup                    | SignUp.jsx          | Signup form for new users                                   |
+| /dashboard                 | Dashboard.jsx       | User dashboard; overview of past interviews, quizzes, etc.  |
+| /interview                 | Subjects.jsx        | List of subjects/topics for AI interviews or MCQs           |
+| /interview/quiz            | QuizMode.jsx        | Page to attempt MCQ quizzes                                 |
+| /interview/start           | Interview.jsx       | Start a chat-based AI interview                             |
+| /interview/:id             | InterviewSession.jsx| Active interview session                                    |
+| /interview/:id/summary     | InterviewSummary.jsx| Detailed results and AI feedback for a completed interview  |
+| /subjects                  | Subjects.jsx        | View all subjects (alternative route)                       |
+| /topics                    | Topics.jsx          | View topics under a subject                                 |
 
 ---
 
 ## 8. Development Roadmap
 
 ### Week 1 – Setup & Authentication
-- Setup React, Node, and MySQL  
+- Setup React, Node, and Postgrel 
 - Implement JWT authentication  
 - Setup frontend routing (React Router)
 
 ### Week 2 – Core Interview System
-- Integrate OpenAI API  
+- Integrate Gemini API  
 - Generate and display AI questions  
 - Build chat-like interface for Q&A  
 - Store user answers and feedback in database  
@@ -160,35 +165,26 @@ npm run dev
 ```
 cd backend
 npm install
-npm install nodemon 
+npm run dev
 ```
 
+### Step 4: .env Backend
 
-To start the backend server:
-```
-npx nodemon server.js
-```
-
-### Step 4: Configure MySQL Database
-
-Create a new MySQL database (e.g., jaago_guru_db).
-
-Add your database credentials in the .env file inside the backend folder.
-
-Example .env file:
+.env file:
 ```
 PORT=5000
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=yourpassword
-DB_NAME=jaago_guru_db
+DATABASE_URL=postgresql****
+DIRECT_URL=postgril....
 JWT_SECRET=your_secret_key
-OPENAI_API_KEY=your_openai_api_key
+GEMINI_API_KEY=your_openai_api_key
 ```
-
+### Step 5: .env Frontend
+```
+VITE_DEEPGRAM_API_KEY=api_key_for_ai_voice_interview
+```
 ### Step 5: Connect Frontend and Backend
 ```
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=https://jaago-guru.onrender.com
 ```
 
 ## 8. Contributors
