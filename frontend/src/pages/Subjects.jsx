@@ -1,17 +1,18 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { 
-  Code2, 
-  Palette, 
-  Settings, 
-  Database, 
-  Shield, 
-  Smartphone, 
-  BarChart3, 
-  Brain, 
+import {
+  Code2,
+  Palette,
+  Settings,
+  Database,
+  Shield,
+  Smartphone,
+  BarChart3,
+  Brain,
   Network,
   ChevronDown,
+  BookOpen,
 } from "lucide-react";
 import Sidebar from "../components/sidebar";
 
@@ -33,7 +34,7 @@ const deepFreeze = (obj) => {
 
 export default function Subjects() {
   const [expandedCategory, setExpandedCategory] = useState(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const categories = useMemo(
     () =>
@@ -84,15 +85,15 @@ export default function Subjects() {
   );
 
   const allCategories = useMemo(() => {
-  return Object.keys(categories).map((name) => ({
-  name,
-  slug: slugify(name),
-  topics: categories[name],
+    return Object.keys(categories).map((name) => ({
+      name,
+      slug: slugify(name),
+      topics: categories[name],
     }));
   }, [categories]);
 
   const getCategoryIcon = (cat) => {
-    const iconProps = { size: 32, strokeWidth: 1.5 };
+    const iconProps = { size: 24, strokeWidth: 2 };
     const icons = {
       "Programming Languages": <Code2 {...iconProps} />,
       "Frontend Development": <Palette {...iconProps} />,
@@ -113,104 +114,93 @@ export default function Subjects() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex">
-    <Sidebar />
-    <main className="flex-1 p-8 overflow-y-auto">
-    <div className="max-w-7xl mx-auto">
-    <div className="mb-8">
-    <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-      Interview Topics
-    </h1>
-      <p className="text-xl text-gray-600 mt-4">
-           Select a category to explore topics and start your preparation
-        </p>
-        </div>
+    <div className="min-h-screen bg-slate-50 flex">
+      <Sidebar />
+      <main className="flex-1 p-8 overflow-y-auto">
+        <div className="max-w-6xl mx-auto">
 
-        <div className="space-y-4">
-          {allCategories.map((category, idx) => (
-            <div
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                <BookOpen className="text-white" size={24} strokeWidth={2} />
+              </div>
+              <h1 className="text-4xl font-bold text-slate-900">
+                Interview Topics
+              </h1>
+            </div>
+            <p className="text-lg text-slate-600">
+              Select a category to explore topics and start your preparation
+            </p>
+          </div>
+
+          {/* Categories */}
+          <div className="space-y-4">
+            {allCategories.map((category) => (
+              <div
                 key={category.slug}
-                className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 overflow-hidden transition-all duration-300"
-                style={{
-                  animationDelay: `${idx * 50}ms`,
-                  animation: "fadeInUp 0.5s ease-out forwards",
-                  opacity: 0,
-                }}
+                className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden"
               >
-
+                {/* Category Header */}
                 <button
                   onClick={() =>
                     setExpandedCategory(
                       expandedCategory === category.slug ? null : category.slug
                     )
                   }
-                  className="w-full p-6 flex items-center justify-between hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all group"
+                  className="w-full p-5 flex items-center justify-between hover:bg-slate-50 transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-blue-600 group-hover:scale-110 group-hover:text-indigo-600 transition-all">
+                    <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
                       {getCategoryIcon(category.name)}
                     </div>
                     <div className="text-left">
-                      <h2 className="text-2xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+                      <h2 className="text-xl font-bold text-slate-900">
                         {category.name}
                       </h2>
-                      <p className="text-sm text-gray-500 mt-1">
-                        {category.topics.length} topics available
+                      <p className="text-sm text-slate-500 mt-0.5">
+                        {category.topics.length} topics
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                    <span className="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
                       {expandedCategory === category.slug ? "Collapse" : "Expand"}
                     </span>
-                    <ChevronDown 
-                      className={`w-6 h-6 text-gray-400 transition-transform duration-300 ${
-                        expandedCategory === category.slug ? "rotate-180" : ""
-                      }`}
+                    <ChevronDown
+                      className={`w-5 h-5 text-slate-400 transition-transform ${expandedCategory === category.slug ? "rotate-180" : ""
+                        }`}
                     />
                   </div>
                 </button>
 
+                {/* Topics Grid */}
                 <div
-                  className={`transition-all duration-300 overflow-hidden ${
-                    expandedCategory === category.slug
+                  className={`transition-all duration-300 overflow-hidden ${expandedCategory === category.slug
                       ? "max-h-[2000px] opacity-100"
                       : "max-h-0 opacity-0"
-                  }`}
+                    }`}
                 >
-                  <div className="p-6 pt-0 border-t border-gray-100">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
+                  <div className="p-5 pt-0 border-t border-slate-100 bg-slate-50">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-4">
                       {category.topics.map((topic, topicIdx) => (
-                        <div
+                        <button
                           key={topicIdx}
                           onClick={() => handleTopicClick(category.name, topic)}
-                          className="group cursor-pointer p-4 rounded-xl bg-gradient-to-br from-gray-50 to-blue-50 border border-gray-200 hover:border-blue-300 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 relative overflow-hidden"
+                          className="text-left p-3.5 rounded-lg bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-slate-700 hover:text-blue-700"
                         >
-                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                          <div className="relative z-10 flex items-center justify-between">
-                            <span className="font-medium text-gray-700 group-hover:text-white transition-colors">
-                              {topic}
-                            </span>
-                          </div>
-                        </div>
+                          {topic}
+                        </button>
                       ))}
                     </div>
                   </div>
                 </div>
-
               </div>
             ))}
           </div>
         </div>
       </main>
-
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }

@@ -61,13 +61,6 @@ const Sidebar = ({ logout }) => {
             active={isActive("/my-attempts")}
             onClick={() => navigate("/my-attempts")}
           />
-
-          <SidebarItem
-            icon={<Settings size={20} />}
-            label="Settings"
-            active={isActive("/settings")}
-            onClick={() => navigate("/settings")}
-          />
         </nav>
 
         <div className="p-4 border-t border-slate-100">

@@ -48,7 +48,7 @@ export default function InterviewSession() {
     (async () => {
       setLoading(true);
       try {
-        const res = await api.get(`/ interview / ${interviewId}/question`);
+        const res = await api.get(`/interview/${interviewId}/question`);
 
         if (res.data.finished) {
           navigate(`/interview/${interviewId}/summary`);
@@ -62,6 +62,7 @@ export default function InterviewSession() {
         });
 
         setTotal(res.data.total);
+        console.log(res.data)
 
         // Now autoplay is allowed because user interacted
         await playTTS(res.data.text);
@@ -405,64 +406,36 @@ export default function InterviewSession() {
   }
 
   // Main Interview Screen
+  if (!question) {
+    return null; // Safety check
+  }
+
   const progress = ((question.index) / total) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6 relative">
-      <style>{`
-        @keyframes recording-pulse {
-          0%, 100% { 
-            transform: scale(1);
-            opacity: 1;
-          }
-          50% { 
-            transform: scale(1.2);
-            opacity: 0.8;
-          }
-        }
-        @keyframes wave {
-          0%, 100% { transform: scaleY(0.5); }
-          50% { transform: scaleY(1); }
-        }
-        @keyframes slide-up {
-          from { 
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to { 
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-recording {
-          animation: recording-pulse 1.5s ease-in-out infinite;
-        }
-        .wave-bar {
-          animation: wave 1s ease-in-out infinite;
-        }
-        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
-        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
-        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
-        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
-        .slide-up {
-          animation: slide-up 0.5s ease-out;
-        }
-      `}</style>
-
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-slate-50 p-6 relative">
+      <div className="max-w-5xl mx-auto">
 
         {/* Header with Progress */}
-        <div className="mb-8 slide-up">
-          <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-6">
+        <div className="mb-6">
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h1 className="text-3xl font-bold text-slate-900">Interview Session</h1>
+                <h1 className="text-2xl font-bold text-slate-900">Interview Session</h1>
+                <p className="text-sm text-slate-600 mt-1">
+                  Question {question.index} of {total}
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-blue-600">{Math.round(progress)}%</div>
+                <p className="text-xs text-slate-500">Complete</p>
               </div>
             </div>
+
             {/* Progress Bar */}
-            <div className="w-full bg-blue-100 rounded-full h-3 overflow-hidden">
+            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-700 ease-out shadow-lg"
+                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
@@ -470,53 +443,53 @@ export default function InterviewSession() {
         </div>
 
         {/* Question Card */}
-        <div className="mb-6 slide-up" style={{ animationDelay: '0.1s' }}>
-          <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
+        <div className="mb-6">
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
             <div className="flex items-start gap-4 mb-6">
               <div className="flex-shrink-0">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 transform transition-transform duration-300 hover:scale-110">
-                  <CircleHelp className="text-white" size={28} strokeWidth={2.5} />
+                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <CircleHelp className="text-white" size={24} strokeWidth={2} />
                 </div>
               </div>
 
               <div className="flex-1">
-                <h2 className="text-sm font-semibold text-blue-600 mb-2 uppercase tracking-wide">
+                <h2 className="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wider">
                   Question {question.index}
                 </h2>
-                <p className="text-2xl font-semibold text-slate-900 leading-relaxed">
+                <p className="text-xl font-semibold text-slate-900 leading-relaxed">
                   {question.text}
                 </p>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 mb-4">
               <button
                 onClick={() => playTTS(question.text)}
                 disabled={isPlayingTTS}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold shadow-md transition-all duration-300 ${isPlayingTTS
-                  ? "bg-blue-100 text-blue-600 cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:scale-105 active:scale-95"
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium border-2 transition-colors ${isPlayingTTS
+                  ? "bg-blue-50 border-blue-200 text-blue-600 cursor-not-allowed"
+                  : "bg-white border-slate-300 text-slate-700 hover:border-blue-500 hover:text-blue-600"
                   }`}
               >
-                <Volume2 size={20} className={isPlayingTTS ? "animate-pulse" : ""} />
+                <Volume2 size={18} />
                 {isPlayingTTS ? "Playing..." : "Play Question"}
               </button>
 
               {!isRecording ? (
                 <button
                   onClick={startRecording}
-                  className="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-xl font-semibold shadow-md hover:bg-red-600 hover:shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors"
                 >
-                  <Mic size={20} />
+                  <Mic size={18} />
                   Start Recording
                 </button>
               ) : (
                 <button
                   onClick={stopRecording}
-                  className="flex items-center gap-2 px-6 py-3 bg-slate-700 text-white rounded-xl font-semibold shadow-md hover:bg-slate-800 hover:shadow-lg transition-all duration-300"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-slate-700 text-white rounded-lg font-medium hover:bg-slate-800 transition-colors"
                 >
-                  <MicOff size={20} className="animate-recording" />
+                  <MicOff size={18} />
                   Stop Recording
                 </button>
               )}
@@ -526,72 +499,65 @@ export default function InterviewSession() {
                   cleanupRecording();
                   startRecording();
                 }}
-                className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-blue-200 text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 hover:border-blue-300"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:border-slate-400 transition-colors"
               >
-                <RotateCcw size={20} />
+                <RotateCcw size={18} />
                 Record Again
               </button>
             </div>
 
             {/* Recording Indicator */}
             {isRecording && (
-              <div className="mt-6 flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-1 h-8 bg-red-500 rounded-full wave-bar"
-                    ></div>
-                  ))}
-                </div>
-                <span className="text-red-600 font-semibold">Recording in progress...</span>
+              <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                <span className="text-red-700 font-semibold text-sm">Recording in progress...</span>
               </div>
             )}
           </div>
         </div>
 
         {/* Answer Card */}
-        <div className="slide-up" style={{ animationDelay: '0.2s' }}>
-          <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
-            <h3 className="text-sm font-semibold text-blue-600 mb-4 uppercase tracking-wide">
+        <div className="mb-6">
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6">
+            <h3 className="text-xs font-bold text-slate-700 mb-3 uppercase tracking-wider">
               Your Answer
             </h3>
 
             <textarea
-              className="w-full h-48 border-2 border-blue-100 rounded-xl p-4 text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all duration-300 resize-none"
-              placeholder="Your answer will appear here as you speak..."
+              className="w-full h-40 border-2 border-slate-200 rounded-lg p-4 text-slate-900 focus:border-blue-500 focus:outline-none transition-colors resize-none font-mono text-sm"
+              placeholder="Your spoken answer will appear here..."
               value={(finalText + " " + partial).trim()}
               onChange={(e) => setFinalText(e.target.value)}
             />
 
             {error && (
-              <div className="mt-4 bg-red-50 border border-red-200 rounded-xl p-4">
-                <p className="text-red-600 font-medium">{error}</p>
+              <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-red-700 font-medium text-sm">{error}</p>
               </div>
             )}
 
             <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm text-slate-500">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>Auto-transcription enabled</span>
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Live transcription active</span>
               </div>
 
               <button
                 onClick={submitAnswer}
                 disabled={isSaving}
-                className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 ${isSaving
-                  ? "bg-slate-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-green-500 to-green-600 text-white hover:shadow-xl hover:scale-105 active:scale-95"
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${isSaving
+                  ? "bg-slate-300 cursor-not-allowed text-slate-500"
+                  : "bg-green-600 text-white hover:bg-green-700"
                   }`}
               >
                 {isSaving ? (
                   <>
-                    <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     Saving...
                   </>
                 ) : (
                   <>
-                    <Send size={20} />
+                    <Send size={18} />
                     Save & Next Question
                   </>
                 )}
@@ -599,14 +565,15 @@ export default function InterviewSession() {
             </div>
           </div>
         </div>
+
       </div>
 
       {/* Back Button - Top Left */}
       <button
         onClick={() => setShowExitPopup(true)}
-        className="fixed top-6 left-6 z-50 flex items-center gap-2 px-5 py-3 bg-white border-2 border-blue-200 text-blue-600 rounded-xl font-semibold shadow-lg hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 hover:scale-105"
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-medium hover:border-slate-400 transition-colors"
       >
-        <ArrowLeft size={20} />
+        <ArrowLeft size={18} />
         Exit Interview
       </button>
 
@@ -615,15 +582,15 @@ export default function InterviewSession() {
         <div className="fixed inset-0 flex items-center justify-center z-[9999]">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fadeIn"
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setShowExitPopup(false)}
           />
 
           {/* Modal */}
-          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md z-50 animate-scaleUp">
+          <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md z-50 border border-slate-200">
             <div className="mb-6">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ArrowLeft className="text-red-600" size={32} />
+              <div className="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <ArrowLeft className="text-red-600" size={28} />
               </div>
               <h2 className="text-2xl font-bold text-slate-900 text-center">Exit Interview?</h2>
               <p className="text-slate-600 mt-3 text-center">
@@ -634,14 +601,14 @@ export default function InterviewSession() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowExitPopup(false)}
-                className="flex-1 px-6 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-all duration-300"
+                className="flex-1 px-6 py-3 rounded-lg bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors"
               >
                 Cancel
               </button>
 
               <button
                 onClick={() => navigate(-1)}
-                className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+                className="flex-1 px-6 py-3 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors"
               >
                 Yes, Exit
               </button>
