@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Mic, MicOff, Volume2, Send, RotateCcw, Sparkles, CircleHelp } from "lucide-react";
+import { Mic, MicOff, Volume2, Send, RotateCcw, Sparkles, CircleHelp, ArrowLeft, CheckCircle, AlertCircle, Wifi } from "lucide-react";
 import api from "../api";
 
 const DG_KEY = import.meta.env.VITE_DEEPGRAM_API_KEY;
@@ -22,6 +22,7 @@ export default function InterviewSession() {
   const [isPlayingTTS, setIsPlayingTTS] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
+  const [showExitPopup, setShowExitPopup] = useState(false);
 
   const wsRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -47,7 +48,7 @@ export default function InterviewSession() {
     (async () => {
       setLoading(true);
       try {
-        const res = await api.get(`/interview/${interviewId}/question`);
+        const res = await api.get(`/ interview / ${interviewId}/question`);
 
         if (res.data.finished) {
           navigate(`/interview/${interviewId}/summary`);
@@ -263,66 +264,109 @@ export default function InterviewSession() {
   // Start Screen
   if (!started) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center p-6">
-        <style>{`
-          @keyframes pulse-glow {
-            0%, 100% { 
-              box-shadow: 0 0 20px rgba(59, 130, 246, 0.3),
-                          0 0 40px rgba(59, 130, 246, 0.2);
-            }
-            50% { 
-              box-shadow: 0 0 30px rgba(59, 130, 246, 0.5),
-                          0 0 60px rgba(59, 130, 246, 0.3);
-            }
-          }
-          @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-          }
-          @keyframes fade-in {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          .animate-pulse-glow {
-            animation: pulse-glow 3s ease-in-out infinite;
-          }
-          .animate-float {
-            animation: float 3s ease-in-out infinite;
-          }
-          .animate-fade-in {
-            animation: fade-in 0.5s ease-out;
-          }
-        `}</style>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="max-w-3xl w-full">
 
-        <div className="text-center max-w-2xl animate-fade-in">
-          <div className="mb-8 inline-block animate-float">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-200">
-              <Sparkles className="text-white" size={48} />
+          {/* Header Card */}
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-8 mb-6">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Mic className="text-white" size={32} strokeWidth={2} />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900 mb-2">
+                  AI Voice Interview Session
+                </h1>
+                <p className="text-slate-600">
+                  Please review the requirements below before starting
+                </p>
+              </div>
             </div>
           </div>
 
-          <h1 className="text-5xl font-bold text-slate-900 mb-4">
-            Ready to Ace Your Interview?
-          </h1>
+          {/* Pre-Interview Checklist */}
+          <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-lg font-bold text-slate-900 mb-4">Pre-Interview Checklist</h2>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <CheckCircle className="text-blue-600" size={16} />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Microphone Access</p>
+                  <p className="text-sm text-slate-600">Ensure your microphone is connected and browser permissions are granted</p>
+                </div>
+              </div>
 
-          <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-            Take a deep breath. We'll guide you through this step by step.
-            Click below when you're ready to begin.
-          </p>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Volume2 className="text-blue-600" size={16} />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Use Headphones (Recommended)</p>
+                  <p className="text-sm text-slate-600">Headphones prevent audio feedback and provide better sound quality</p>
+                </div>
+              </div>
 
-          <button
-            onClick={() => setStarted(true)}
-            className="group px-10 py-5 bg-blue-600 text-white text-lg font-bold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-blue-700 transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse-glow"
-          >
-            <span className="flex items-center gap-3">
-              Start Interview
-              <Sparkles className="group-hover:rotate-12 transition-transform" size={24} />
-            </span>
-          </button>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <AlertCircle className="text-blue-600" size={16} />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Quiet Environment</p>
+                  <p className="text-sm text-slate-600">Find a quiet space to minimize background noise and distractions</p>
+                </div>
+              </div>
 
-          <p className="mt-6 text-sm text-slate-500">
-            Make sure your microphone is connected and working
-          </p>
+              <div className="flex items-start gap-3">
+                <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Wifi className="text-blue-600" size={16} />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Stable Internet Connection</p>
+                  <p className="text-sm text-slate-600">Required for real-time voice transcription and processing</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* How It Works */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+            <h2 className="text-lg font-bold text-slate-900 mb-3">How It Works</h2>
+            <ol className="space-y-2 text-sm text-slate-700">
+              <li className="flex gap-2">
+                <span className="font-semibold text-blue-600">1.</span>
+                <span>Listen to each question read aloud by our AI interviewer</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-blue-600">2.</span>
+                <span>Click "Start Recording" and speak your answer clearly</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-blue-600">3.</span>
+                <span>Review the transcribed answer and submit to continue</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-semibold text-blue-600">4.</span>
+                <span>Receive detailed feedback and analysis after completing all questions</span>
+              </li>
+            </ol>
+          </div>
+
+          {/* Start Button */}
+          <div className="text-center">
+            <button
+              onClick={() => setStarted(true)}
+              className="px-12 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+            >
+              <Mic size={20} />
+              Begin Interview Session
+            </button>
+            <p className="mt-4 text-sm text-slate-500">
+              Click the button above when you're ready to start
+            </p>
+          </div>
+
         </div>
       </div>
     );
@@ -364,7 +408,7 @@ export default function InterviewSession() {
   const progress = ((question.index) / total) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6 relative">
       <style>{`
         @keyframes recording-pulse {
           0%, 100% { 
@@ -413,9 +457,6 @@ export default function InterviewSession() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h1 className="text-3xl font-bold text-slate-900">Interview Session</h1>
-                <p className="text-sm text-blue-600 font-medium mt-1">
-                  Question {question.index}
-                </p>
               </div>
             </div>
             {/* Progress Bar */}
@@ -432,16 +473,15 @@ export default function InterviewSession() {
         <div className="mb-6 slide-up" style={{ animationDelay: '0.1s' }}>
           <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
             <div className="flex items-start gap-4 mb-6">
-              <div className="relative flex-shrink-0">
+              <div className="flex-shrink-0">
                 <div className="w-14 h-14 bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 transform transition-transform duration-300 hover:scale-110">
                   <CircleHelp className="text-white" size={28} strokeWidth={2.5} />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
               </div>
 
               <div className="flex-1">
                 <h2 className="text-sm font-semibold text-blue-600 mb-2 uppercase tracking-wide">
-                  Current Question
+                  Question {question.index}
                 </h2>
                 <p className="text-2xl font-semibold text-slate-900 leading-relaxed">
                   {question.text}
@@ -539,27 +579,76 @@ export default function InterviewSession() {
               <button
                 onClick={submitAnswer}
                 disabled={isSaving}
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className={`flex items-center gap-2 px-8 py-4 rounded-2xl font-bold shadow-lg transition-all duration-300 ${isSaving
+                  ? "bg-slate-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-green-500 to-green-600 text-white hover:shadow-xl hover:scale-105 active:scale-95"
+                  }`}
               >
-                {isSaving ? "Saving..." : "Save & Next"}
+                {isSaving ? (
+                  <>
+                    <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Send size={20} />
+                    Save & Next Question
+                  </>
+                )}
               </button>
             </div>
-          
-
-          <div className="mt-4">
-            <button
-              onClick={() => {
-                navigate(-1)
-              }}
-              className="px-4 py-2 bg-gray-400 text-white rounded"
-            >
-              Back
-            </button>
           </div>
         </div>
-        </div>
-
       </div>
+
+      {/* Back Button - Top Left */}
+      <button
+        onClick={() => setShowExitPopup(true)}
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 px-5 py-3 bg-white border-2 border-blue-200 text-blue-600 rounded-xl font-semibold shadow-lg hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 hover:scale-105"
+      >
+        <ArrowLeft size={20} />
+        Exit Interview
+      </button>
+
+      {/* Exit Confirmation Popup */}
+      {showExitPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-[9999]">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fadeIn"
+            onClick={() => setShowExitPopup(false)}
+          />
+
+          {/* Modal */}
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md z-50 animate-scaleUp">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ArrowLeft className="text-red-600" size={32} />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 text-center">Exit Interview?</h2>
+              <p className="text-slate-600 mt-3 text-center">
+                Are you sure you want to exit? Your current progress may not be saved.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowExitPopup(false)}
+                className="flex-1 px-6 py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-all duration-300"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => navigate(-1)}
+                className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold hover:shadow-lg transition-all duration-300 hover:scale-105"
+              >
+                Yes, Exit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
