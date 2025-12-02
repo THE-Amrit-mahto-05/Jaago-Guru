@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LayoutDashboard, Play, FileText, Settings, LogOut, BrainCircuit } from "lucide-react";
+import { LayoutDashboard, Play, FileText, Settings, LogOut, BrainCircuit, Mic } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const Sidebar = ({ logout }) => {
@@ -41,12 +41,19 @@ const Sidebar = ({ logout }) => {
             onClick={() => navigate("/dashboard")}
           />
 
-        <SidebarItem
-          icon={<Play size={20} />}
-          label="Interview (MCQ)"
-          active={isActive("/interview")}
-          onClick={() => navigate("/interview")}
-        />
+          <SidebarItem
+            icon={<Mic size={20} />}
+            label="AI Voice Interview"
+            active={isActive("/interview/start")}
+            onClick={() => navigate("/interview/start")}
+          />
+
+          <SidebarItem
+            icon={<Play size={20} />}
+            label="Interview (MCQ)"
+            active={isActive("/interview")}
+            onClick={() => navigate("/interview")}
+          />
 
           <SidebarItem
             icon={<FileText size={20} />}

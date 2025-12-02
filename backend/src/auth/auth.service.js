@@ -27,7 +27,7 @@ const registerUser = async ({name, email, password}) => {
     data: {name, email, password: hashed}
   })
 
-  const token = jwt.sign({id: user.id, email: user.email}, process.env.JWT_SECRET, {expiresIn: "1d"})
+  const token = jwt.sign({id: user.id, email: user.email, name: user.name}, process.env.JWT_SECRET, {expiresIn: "1d"})
 
   const { password: _, ...safeUser } = user
   return { user: safeUser, token }
@@ -54,7 +54,7 @@ const loginUser = async ({ email, password }) => {
     throw new Error("Invalid email or password")
   }
 
-  const token = jwt.sign({id: user.id, email: user.email}, process.env.JWT_SECRET, {expiresIn: "1d"})
+  const token = jwt.sign({id: user.id, email: user.email, name: user.name}, process.env.JWT_SECRET, {expiresIn: "1d"})
 
   const { password: _, ...safeUser } = user
   return { user: safeUser, token }
