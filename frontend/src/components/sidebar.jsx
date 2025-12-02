@@ -41,12 +41,12 @@ const Sidebar = ({ logout }) => {
             onClick={() => navigate("/dashboard")}
           />
 
-          <SidebarItem
-            icon={<Play size={20} />}
-            label="Start Interview"
-            active={isActive("/interview")}
-            onClick={() => navigate("/interview")}
-          />
+        <SidebarItem
+          icon={<Play size={20} />}
+          label="Interview (MCQ)"
+          active={isActive("/interview")}
+          onClick={() => navigate("/interview")}
+        />
 
           <SidebarItem
             icon={<FileText size={20} />}

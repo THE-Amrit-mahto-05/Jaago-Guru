@@ -3,15 +3,15 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import Subjects from "./pages/Subjects"; 
+import Subjects from "./pages/Subjects";
 import QuizMode from "./pages/QuizMode";
-import QuizPage from "./pages/QuizPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -43,14 +43,6 @@ function App() {
           }
         />
 
-        <Route
-          path="/interview/quiz/play"
-          element={
-            <ProtectedRoute>
-              <QuizPage />
-            </ProtectedRoute>
-          }
-        />
       </Routes>
     </BrowserRouter>
   );
