@@ -87,13 +87,16 @@ const fetchNextQuestion = async (interviewId) => {
       interviewId: Number(interviewId),
       userAnswer: null
     },
-    orderBy: { index: "asc" }
+    orderBy: { index: "asc" },
+    include: {
+      interview: true
+    }
   })
 
   if (!next) {
     const summary = await prisma.interviewQuestion.findMany({
       where: { interviewId: Number(interviewId) },
-      orderBy: { index: "asc" }
+      orderBy: { index: "asc" },
     })
 
     return { finished: true, summary }
@@ -103,13 +106,15 @@ const fetchNextQuestion = async (interviewId) => {
     finished: false,
     questionId: next.id,
     text: next.text,
-    index: next.index
+    index: next.index,
+    total: next.interview.totalQ
   }
 }
 
 const saveUserAnswerAndEvaluate = async ({ interviewId, questionId, answerText }) => {
   const q = await prisma.interviewQuestion.findUnique({
-    where: { id: Number(questionId) }
+    where: { id: Number(questionId) },
+    include: { interview: true }
   })
 
   const evalPrompt = `
@@ -171,7 +176,8 @@ const saveUserAnswerAndEvaluate = async ({ interviewId, questionId, answerText }
 
   const next = await prisma.interviewQuestion.findFirst({
     where: { interviewId: Number(interviewId), userAnswer: null },
-    orderBy: { index: "asc" }
+    orderBy: { index: "asc" },
+    include: { interview: true }
   })
 
   if (!next) {
@@ -192,7 +198,8 @@ const saveUserAnswerAndEvaluate = async ({ interviewId, questionId, answerText }
     nextQuestion: {
       questionId: next.id,
       text: next.text,
-      index: next.index
+      index: next.index,
+      total: next.interview.totalQ
     },
     evaluation
   }
