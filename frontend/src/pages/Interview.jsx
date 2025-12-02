@@ -11,6 +11,7 @@ export default function StartInterview() {
   const [role, setRole] = useState("")
   const [experience, setExperience] = useState("")
   const [count, setCount] = useState(5)
+  const [open, setOpen] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -126,30 +127,58 @@ export default function StartInterview() {
 
             <div className="space-y-6">
 
-              {/* Job Role */}
-              <div>
+              <div className="relative w-full">
                 <label className="block mb-2 text-sm font-semibold text-slate-700 uppercase tracking-wide">
                   Job Role
                 </label>
-                <div className="relative">
-                  <select
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="w-full p-3 pr-10 border-2 border-slate-200 rounded-lg bg-white text-slate-900 font-medium focus:border-blue-500 focus:outline-none cursor-pointer appearance-none hover:border-slate-300 transition-colors"
+
+                <div
+                  onClick={() => setOpen(!open)}
+                  className={`
+                    bg-gradient-to-br from-white to-blue-50/30 p-4 rounded-xl border-2 
+                    ${open ? 'border-blue-500 shadow-lg' : 'border-slate-200'}
+                    cursor-pointer transition-all duration-200
+                    flex justify-between items-center
+                    hover:border-blue-300
+                  `}
+                >
+                  <span className={`font-medium ${role ? 'text-slate-800' : 'text-slate-400'}`}>
+                    {role || "Select your target job role..."}
+                  </span>
+
+                  <svg
+                    className={`w-5 h-5 text-blue-600 transition-transform duration-200 ${open ? "rotate-180" : ""
+                      }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <option value="" disabled>Select your target job role...</option>
-                    {jobRoles.map((r, idx) => (
-                      <option key={idx} value={r}>
-                        {r}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
+
+                {open && (
+                  <div className="absolute left-0 right-0 mt-2 bg-white border-2 border-slate-200 shadow-xl rounded-xl overflow-hidden z-50 max-h-80 overflow-y-auto">
+                    {jobRoles.map((item, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => {
+                          setRole(item);
+                          setOpen(false);
+                        }}
+                        className={`
+                          px-4 py-3 cursor-pointer font-medium transition-all
+                          ${role === item
+                            ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
+                            : 'text-slate-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50'
+                          }
+                        `}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Experience Level */}
