@@ -16,7 +16,6 @@ model User {
   password   String
   createdAt  DateTime    @default(now())
   interviews Interview[]
-  mcqs       MCQ[]
 }
 
 model Interview {
@@ -45,15 +44,17 @@ model InterviewQuestion {
   createdAt    DateTime  @default(now())
 }
 
-model MCQ {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-  subject     String
-  topic       String
-  question    String
-  options     String   
-  answer      String
-  explanation String   
-  createdAt   DateTime @default(now())
+model MCQAttempt {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("userid")
+  subject   String
+  topic     String
+  correct   Int
+  wrong     Int
+  total     Int
+  timeSec   Int      @map("timesec")
+  selected  Json
+  questions Json?
+  createdAt DateTime @default(now()) @map("createdat")
+  @@map("mcq_attempt")
 }

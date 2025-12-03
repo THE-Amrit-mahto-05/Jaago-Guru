@@ -5,6 +5,8 @@ import Signup from "./pages/SignUp"
 import Dashboard from "./pages/Dashboard"
 import Subjects from "./pages/Subjects"
 import QuizMode from "./pages/QuizMode"
+import QuizResults from "./pages/QuizResults"
+import MyAttempts from "./pages/MyAttempts"
 import ProtectedRoute from "./components/ProtectedRoute"
 import StartInterview from "./pages/Interview"
 import InterviewSession from "./pages/InterviewSession"
@@ -19,8 +21,8 @@ function App() {
        <Route path="/login" element={<Login />} />
        <Route path="/signup" element={<Signup />} />
 
-       <Route
-         path="/dashboard"
+      <Route
+        path="/dashboard"
          element={
            <ProtectedRoute>
              <Dashboard />
@@ -37,14 +39,41 @@ function App() {
          }
        />
 
-       <Route
-         path="/interview/quiz"
-         element={
-           <ProtectedRoute>
-             <QuizMode />
-           </ProtectedRoute>
-         }
-       />
+      <Route
+        path="/interview/quiz"
+        element={
+          <ProtectedRoute>
+            <QuizMode />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/interview/quiz/results"
+        element={
+          <ProtectedRoute>
+            <QuizResults />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/my-attempts"
+        element={
+          <ProtectedRoute>
+            <MyAttempts />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/my-attempts/:id"
+        element={
+          <ProtectedRoute>
+            <MyAttempts />
+          </ProtectedRoute>
+        }
+      />
 
        <Route
          path="/interview/start"
