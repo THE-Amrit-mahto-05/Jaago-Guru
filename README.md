@@ -30,7 +30,7 @@ Build a web platform where users can:
 
 ---
 
-### Phase 2 – Smart Features (Optional)
+### Phase 2 – Smart Features 
 
 **Add:**
 1. Role-based interviews (e.g., Frontend Developer, Data Analyst)  
