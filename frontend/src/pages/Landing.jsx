@@ -28,8 +28,17 @@ export default function Landing() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -119,12 +128,14 @@ export default function Landing() {
               <>
                 <button
                   onClick={() => navigate("/login")}
+                  onMouseEnter={() => import("./Login")}
                   className="px-5 py-2.5 text-slate-600 font-medium hover:text-indigo-600 transition-colors"
                 >
                   Log in
                 </button>
                 <button
                   onClick={() => navigate("/signup")}
+                  onMouseEnter={() => import("./SignUp")}
                   className="px-6 py-2.5 bg-indigo-600 text-white rounded-full font-medium hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-0.5"
                 >
                   Sign up free
@@ -181,6 +192,8 @@ export default function Landing() {
               <img
                 src="/screenshot.png"
                 className="w-full h-auto"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>
