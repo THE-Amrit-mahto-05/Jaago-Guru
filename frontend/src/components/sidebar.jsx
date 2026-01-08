@@ -12,8 +12,13 @@ const Sidebar = ({ logout }) => {
   const openLogoutModal = () => setShowLogoutModal(true);
   const closeLogoutModal = () => setShowLogoutModal(false);
 
-  const confirmLogout = () => {
-    logout();
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("token");
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
     closeLogoutModal();
   };
 
@@ -100,7 +105,7 @@ const Sidebar = ({ logout }) => {
               </button>
 
               <button
-                onClick={confirmLogout}
+                onClick={handleLogout}
                 className="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition"
               >
                 Logout
