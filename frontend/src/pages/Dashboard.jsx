@@ -10,15 +10,14 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get("/auth/profile")
-      .then((res) => {
-        setUser(res.data.user);
-        setTimeout(() => setLoading(false), 500);
-      })
-      .catch(() => {
+  api.get("/auth/profile")
+  .then((res) => {
+  setUser(res.data.user);
+setTimeout(() => setLoading(false), 500);})
+ .catch(() => {
         localStorage.removeItem("token");
-        navigate("/login");
-      });
+  navigate("/login");
+   });
   }, []);
 
   const logout = () => {
@@ -28,67 +27,50 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="relative">
-          <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-        </div>
-      </div>
+<div className="min-h-screen bg-slate-50 flex items-center justify-center">
+<div className="relative">
+  <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+ </div>
+ </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
       <Sidebar logout={logout} />
-
       <main className="flex-1 p-8 overflow-y-auto h-screen">
-        {/* Header Section */}
-        <header
-          className="flex items-center justify-between mb-10"
-          style={{ animation: "fadeInDown 0.6s ease-out" }}
-        >
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-              Dashboard
-            </h1>
-            <p className="text-slate-500 mt-1 text-lg">
-              Welcome back, <span className="font-medium text-indigo-600">{user?.name || "User"}</span>! 👋
-            </p>
-          </div>
+<header className="flex items-center justify-between mb-10"
+style={{ animation: "fadeInDown 0.6s ease-out" }}>
+<div>
+<h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard </h1>
+<p className="text-slate-500 mt-1 text-lg">Welcome back, <span className="font-medium text-indigo-600">{user?.name || "User"}</span>! 👋
+ </p></div>
 
-          <div className="flex items-center gap-4 bg-white px-5 py-2.5 rounded-full shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300">
-            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg border-2 border-white shadow-sm">
-              {user?.email ? user.email.charAt(0).toUpperCase() : "?"}
-            </div>
-            <div className="hidden md:block text-right mr-2">
-              <p className="text-xs text-slate-400 uppercase font-semibold tracking-wider">Profile</p>
-              <p className="text-sm font-semibold text-slate-700 leading-tight">{user.name}</p>
-            </div>
-          </div>
-        </header>
+<div className="flex items-center gap-4 bg-white px-5 py-2.5 rounded-full shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300">
+<div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg border-2 border-white shadow-sm">
+{user?.email ? user.email.charAt(0).toUpperCase() : "?"}</div>
+<div className="hidden md:block text-right mr-2">
+<p className="text-xs text-slate-400 uppercase font-semibold tracking-wider">Profile</p>
+<p className="text-sm font-semibold text-slate-700 leading-tight">{user.name}</p>
+ </div></div>
+ </header>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          {/* Total Interviews Card */}
-          <div
-            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
-            style={{ animation: "fadeInUp 0.6s ease-out 0.1s both" }}
-          >
-            <div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                  <TrendingUp size={24} />
-                </div>
-                <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1">
-                  +3 this week
-                </span>
-              </div>
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10"> <div
+className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
+ style={{ animation: "fadeInUp 0.6s ease-out 0.1s both" }} >
+<div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+<div className="relative z-10">
+ <div className="flex items-center justify-between mb-4">
+ <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+<TrendingUp size={24} /> </div>
+<span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1">
+ +3 this week
+</span></div>
               <h3 className="text-slate-500 font-medium text-sm uppercase tracking-wide">Total Interviews</h3>
               <p className="text-4xl font-bold text-slate-800 mt-1">12</p>
             </div>
           </div>
 
-          {/* Success Score Card */}
           <div
             className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
             style={{ animation: "fadeInUp 0.6s ease-out 0.2s both" }}
@@ -107,8 +89,6 @@ export default function Dashboard() {
               <p className="text-4xl font-bold text-slate-800 mt-1">82%</p>
             </div>
           </div>
-
-          {/* Streak Days Card */}
           <div
             className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
             style={{ animation: "fadeInUp 0.6s ease-out 0.3s both" }}
@@ -128,8 +108,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-
-        {/* Hero / CTA Section */}
         <div
           className="mb-10 relative overflow-hidden rounded-3xl shadow-xl group"
           style={{ animation: "fadeInUp 0.6s ease-out 0.4s both" }}
@@ -161,8 +139,6 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
-
-        {/* Recent Attempts Section */}
         <div style={{ animation: "fadeInUp 0.6s ease-out 0.5s both" }}>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-slate-800">Recent Attempts</h2>

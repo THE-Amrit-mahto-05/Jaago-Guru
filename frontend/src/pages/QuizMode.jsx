@@ -16,7 +16,6 @@ export default function QuizMode() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
-  // NEW: Confirmation popup state
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
 
   useEffect(() => {
@@ -86,11 +85,37 @@ export default function QuizMode() {
     return { correct, wrong };
   };
 
-  const finalizeQuiz = () => {
+  const finalizeQuiz = async () => {
     const scoreData = calculateScore();
-    navigate("/results", {
+
+    const payloadQuestions = questions.map((q, idx) => {
+      const selected = selectedOptions[idx] || "";
+      const isCorrect = selected && selected === q.answer;
+      const analysis = selected
+        ? `Selected: ${selected.toUpperCase()} | Correct: ${q.answer.toUpperCase()} | Result: ${isCorrect ? "Correct" : "Incorrect"}`
+        : "Not attempted";
+      const explanation = [analysis, q.explanation].filter(Boolean).join(" | ");
+      return { question: q.question, options: q.options, answer: q.answer, explanation };
+    });
+
+    try {
+      await api.post("/mcq/attempt", {
+        subject,
+        topic,
+        score: scoreData,
+        time: seconds,
+        selectedOptions,
+        questions: payloadQuestions,
+      });
+    } catch (err) {
+      console.error("Save attempt error:", err);
+    }
+
+    navigate("/interview/quiz/results", {
       state: {
-        questions,
+        subject,
+        topic,
+        questions: payloadQuestions,
         selectedOptions,
         score: scoreData,
         time: seconds,
@@ -109,48 +134,35 @@ export default function QuizMode() {
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="h-screen bg-gradient-to-b from-white via-blue-50 to-white relative">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+   <div className="h-screen bg-gradient-to-b from-white via-blue-50 to-white relative">
+   <div className="max-w-4xl mx-auto px-4 py-8">
+ <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6 mb-6 backdrop-blur-sm">
+  <div className="flex items-center justify-between flex-wrap gap-4">
+  <div>
+  <h1 className="text-3xl font-bold text-blue-900">{topic}</h1>
+    <p className="text-sm text-blue-600 font-medium">MCQ Mode</p>
+  </div>
 
-        {/* Header */}
-        <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6 mb-6 backdrop-blur-sm">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-blue-900">{topic}</h1>
-              <p className="text-sm text-blue-600 font-medium">MCQ Mode</p>
-            </div>
+  <div className="flex items-center gap-3">   {startMCQ && (
+    <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-xl border border-blue-200 shadow-sm">
+    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+   <span className="font-mono text-lg font-semibold text-blue-700">   {Math.floor(seconds / 60)}:{(seconds % 60).toString().padStart(2, "0")}
+ </span> </div>  )}
 
-            <div className="flex items-center gap-3">
-              {startMCQ && (
-                <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-xl border border-blue-200 shadow-sm">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="font-mono text-lg font-semibold text-blue-700">
-                    {Math.floor(seconds / 60)}:{(seconds % 60).toString().padStart(2, "0")}
-                  </span>
-                </div>
-              )}
+<button onClick={() => 
+{ if (startMCQ) setShowConfirmPopup(true);
+   else fetchMCQ(); }}
+ disabled={loading}
+  className={`px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 ${
+    startMCQ  ? "bg-red-500 text-white" : "bg-blue-600 text-white"  }`}   >
+  {startMCQ ? "End Quiz" : loading ? "Loading..." : "Start Quiz"}
+  </button>
+ </div>
+ </div>
+  </div>
 
-              <button
-                onClick={() => {
-                  if (startMCQ) setShowConfirmPopup(true);
-                  else fetchMCQ();
-                }}
-                disabled={loading}
-                className={`px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 ${
-                  startMCQ
-                    ? "bg-red-500 text-white"
-                    : "bg-blue-600 text-white"
-                }`}
-              >
-                {startMCQ ? "End Quiz" : loading ? "Loading..." : "Start Quiz"}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Quiz Content */}
         {startMCQ && (
           <>
             {loading ? (
@@ -164,7 +176,6 @@ export default function QuizMode() {
               currentQuestion && (
                 <div className="space-y-6">
 
-                  {/* Progress */}
                   <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-sm font-semibold text-blue-700">
@@ -183,7 +194,6 @@ export default function QuizMode() {
                     </div>
                   </div>
 
-                  {/* Question Card */}
                   <div className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8">
                     <div className="flex items-start gap-4 mb-6">
                       <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold shadow-md">
@@ -195,7 +205,6 @@ export default function QuizMode() {
                       </h2>
                     </div>
 
-                    {/* Options */}
                     <div className="space-y-3 mb-6">
                       {currentQuestion.options?.map((opt) => {
                         const isSelected =
@@ -246,8 +255,6 @@ export default function QuizMode() {
                         );
                       })}
                     </div>
-
-                    {/* Explanation */}
                     {selectedOptions[currentIndex] && (
                       <div className="space-y-4 animate-fade-in">
                         <div className="bg-blue-50 rounded-xl p-5 border border-blue-200">
@@ -279,8 +286,6 @@ export default function QuizMode() {
                       </div>
                     )}
                   </div>
-
-                  {/* Navigation */}
                   <div className="bg-white rounded-2xl shadow-md border border-blue-100 p-6">
                     <div className="flex items-center justify-between">
 
@@ -326,45 +331,24 @@ export default function QuizMode() {
           </>
         )}
       </div>
-
-      {/* -------------------------------------------
-         CONFIRMATION POPUP
-      ------------------------------------------- */}
       {showConfirmPopup && (
-        <div className="absolute inset-0 backdrop-blur-md bg-transparent flex items-center justify-center z-50">
+ <div className="absolute inset-0 backdrop-blur-md bg-transparent flex items-center justify-center z-50">
+ <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8 border border-blue-200 animate-fade-in-scale">
+<h2 className="text-2xl font-bold text-blue-900 mb-4 text-center"> End Quiz? </h2>
 
+ <p className="text-gray-700 text-center mb-6">Are you sure you want to end the quiz? Your answers will be submitted.</p>
+ <div className="flex items-center justify-center gap-4">
+ <button onClick={() => setShowConfirmPopup(false)} className="px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition" >
+Cancel</button>
 
-          <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8 border border-blue-200 animate-fade-in-scale">
+ <button
+onClick={finalizeQuiz}
+ className="px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition shadow-md">
+ Yes, End Quiz </button>
+</div>
+</div>
 
-            <h2 className="text-2xl font-bold text-blue-900 mb-4 text-center">
-              End Quiz?
-            </h2>
-
-            <p className="text-gray-700 text-center mb-6">
-              Are you sure you want to end the quiz? Your answers will be submitted.
-            </p>
-
-            <div className="flex items-center justify-center gap-4">
-              <button
-                onClick={() => setShowConfirmPopup(false)}
-                className="px-6 py-3 rounded-xl border border-gray-300 bg-gray-100 text-gray-700 font-semibold hover:bg-gray-200 transition"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={finalizeQuiz}
-                className="px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition shadow-md"
-              >
-                Yes, End Quiz
-              </button>
-            </div>
-
-          </div>
-
-        </div>
-      )}
-
-    </div>
+ </div> )}
+ </div>
   );
 }

@@ -118,73 +118,49 @@ export default function Subjects() {
       <Sidebar />
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-6xl mx-auto">
+<div className="mb-8">
+  <div className="flex items-center gap-3 mb-3">
+  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+  <BookOpen className="text-white" size={24} strokeWidth={2} />
+   </div>
+    <h1 className="text-4xl font-bold text-slate-900">   Interview Topics    </h1>
+  </div>
+   <p className="text-lg text-slate-600">   Select a category to explore topics and start your preparation   </p>
+ </div>
+ <div className="space-y-4">
+  {allCategories.map((category) => (
+   <div
+    key={category.slug}
+    className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden"   >
+ <button
+   onClick={() =>
+ setExpandedCategory(  expandedCategory === category.slug ? null : category.slug   ) }
+  className="w-full p-5 flex items-center justify-between hover:bg-slate-50 transition-colors" >
+  <div className="flex items-center gap-4">
+   <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
+   {getCategoryIcon(category.name)}
+  </div>
+   <div className="text-left">
+ <h2 className="text-xl font-bold text-slate-900">
+  {category.name} </h2>
+  <p className="text-sm text-slate-500 mt-0.5">
+     {category.topics.length} topics   </p>
+  </div>
+   </div>
 
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="text-white" size={24} strokeWidth={2} />
-              </div>
-              <h1 className="text-4xl font-bold text-slate-900">
-                Interview Topics
-              </h1>
-            </div>
-            <p className="text-lg text-slate-600">
-              Select a category to explore topics and start your preparation
-            </p>
-          </div>
-
-          {/* Categories */}
-          <div className="space-y-4">
-            {allCategories.map((category) => (
-              <div
-                key={category.slug}
-                className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden"
-              >
-                {/* Category Header */}
-                <button
-                  onClick={() =>
-                    setExpandedCategory(
-                      expandedCategory === category.slug ? null : category.slug
-                    )
-                  }
-                  className="w-full p-5 flex items-center justify-between hover:bg-slate-50 transition-colors"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
-                      {getCategoryIcon(category.name)}
-                    </div>
-                    <div className="text-left">
-                      <h2 className="text-xl font-bold text-slate-900">
-                        {category.name}
-                      </h2>
-                      <p className="text-sm text-slate-500 mt-0.5">
-                        {category.topics.length} topics
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
-                      {expandedCategory === category.slug ? "Collapse" : "Expand"}
-                    </span>
-                    <ChevronDown
-                      className={`w-5 h-5 text-slate-400 transition-transform ${expandedCategory === category.slug ? "rotate-180" : ""
-                        }`}
-                    />
-                  </div>
-                </button>
-
-                {/* Topics Grid */}
-                <div
-                  className={`transition-all duration-300 overflow-hidden ${expandedCategory === category.slug
-                      ? "max-h-[2000px] opacity-100"
-                      : "max-h-0 opacity-0"
-                    }`}
-                >
-                  <div className="p-5 pt-0 border-t border-slate-100 bg-slate-50">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-4">
-                      {category.topics.map((topic, topicIdx) => (
+  <div className="flex items-center gap-3">
+ <span className="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
+ {expandedCategory === category.slug ? "Collapse" : "Expand"}
+  </span>
+  <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${expandedCategory === category.slug ? "rotate-180" : ""   }`}   />
+ </div>
+  </button>
+ <div
+  className={`transition-all duration-300 overflow-hidden ${expandedCategory === category.slug
+  ? "max-h-[2000px] opacity-100"   : "max-h-0 opacity-0"   }`} >
+<div className="p-5 pt-0 border-t border-slate-100 bg-slate-50">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-4">
+  {category.topics.map((topic, topicIdx) => (
                         <button
                           key={topicIdx}
                           onClick={() => handleTopicClick(category.name, topic)}
@@ -192,14 +168,14 @@ export default function Subjects() {
                         >
                           {topic}
                         </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+ ))}
+ </div>
+   </div>
+ </div>
+   </div>
+  ))}
+ </div>
+  </div>
       </main>
     </div>
   );
