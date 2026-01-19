@@ -45,7 +45,7 @@ export default function Signup() {
  <button  onClick={() => navigate("/")}
  className="inline-block mb-4 hover:scale-105 transition-transform" >
    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-transparent bg-clip-text">
-  AI Interview Prep </h1> </button>
+  InterviewMate </h1> </button>
  </div>
 
 
