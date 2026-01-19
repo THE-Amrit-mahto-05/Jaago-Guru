@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { LayoutDashboard, Play, FileText, Settings, LogOut, BrainCircuit, Mic } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const Sidebar = ({ logout }) => {
+const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -32,8 +32,8 @@ const Sidebar = ({ logout }) => {
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
               <BrainCircuit className="text-white" size={24} />
             </div>
-            <h2 className="text-xl font-bold text-slate-800 tracking-tight">
-              AI Prep
+            <h2 className="text-xl font-bold text-slate-800 font-['Plus_Jakarta_Sans'] tracking-tight">
+              InterviewMate
             </h2>
           </div>
         </div>

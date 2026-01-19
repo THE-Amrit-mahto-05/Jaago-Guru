@@ -113,7 +113,9 @@ export default function Landing() {
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
               <BrainCircuit className="text-white" size={24} />
             </div>
-            <span className="text-xl font-bold text-slate-900 tracking-tight">AI Prep</span>
+            <span className="text-[1.375rem] font-semibold tracking-[0.055em] text-slate-900 font-['Plus_Jakarta_Sans']">
+              Interview<span className="text-indigo-600 font-bold">Mate</span>
+            </span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -321,7 +323,7 @@ export default function Landing() {
             <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
             <div className="relative z-10">
               <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Ready to land your dream job?</h2>
-              <p className="text-indigo-100 text-lg mb-8 max-w-2xl mx-auto">Join thousands of developers who are using AI Prep to master their technical interviews.</p>
+              <p className="text-indigo-100 text-lg mb-8 max-w-2xl mx-auto">Join thousands of developers who are using InterviewMate to master their technical interviews.</p>
               <button onClick={handleGetStarted} className="px-10 py-4 bg-white text-indigo-600 rounded-full font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300" > Get Started for Free </button>
             </div>
           </div>
@@ -334,13 +336,13 @@ export default function Landing() {
             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
               <BrainCircuit className="text-white" size={20} />
             </div>
-            <span className="text-lg font-bold text-slate-900">AI Prep</span>
+            <span className="text-lg font-bold text-slate-900">InterviewMate</span>
           </div>
           <div className="text-slate-500 text-sm">
-            © {new Date().getFullYear()} AI Prep. All rights reserved.
+            © {new Date().getFullYear()} InterviewMate. All rights reserved.
           </div>
           <div className="flex gap-6">
-            <a href="#" className="text-slate-500 hover:text-indigo-600 transition-colors">GitHub</a>
+            <a href="https://github.com/THE-Amrit-mahto-05/Jaago-Guru" className="text-slate-500 hover:text-indigo-600 transition-colors">GitHub</a>
             <a href="#" className="text-slate-500 hover:text-indigo-600 transition-colors">LinkedIn</a>
           </div>
         </div>
