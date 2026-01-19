@@ -17,7 +17,7 @@ export default function Topics() {
   useEffect(() => {
     async function fetchTopics() {
       try {
-        const res = await api.post("/ai/topics", { subject: readableSubject });
+        const res = await api.post("/mcq/topics", { subject: readableSubject });
         setTopics(res.data.topics);
       } catch (err) {
         console.error("Failed to load topics", err);

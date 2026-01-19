@@ -30,7 +30,7 @@ export default function QuizMode() {
     setStartMCQ(true);
     setLoading(true);
     try {
-      const res = await api.post("/ai/ask", { subject, topic, mode: "mcq" });
+      const res = await api.post("/mcq/ask", { subject, topic, mode: "mcq" });
       if (res.data.success) {
         const rawText = res.data.data.candidates[0].content.parts[0].text;
         const qArr = rawText
