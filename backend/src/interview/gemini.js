@@ -27,7 +27,7 @@ async function generateJSON(prompt, retries = 3) {
 
     if (status === 503 && retries > 0) {
       console.warn(`Gemini overloaded. Retrying... (${retries})`)
-      await sleep(1500)
+      await sleep((4 - retries) * 1500)
       return generateJSON(prompt, retries - 1)
     }
 
