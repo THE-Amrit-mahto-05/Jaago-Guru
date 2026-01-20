@@ -20,7 +20,14 @@ const startInterview = async (req, res) => {
     })
   } catch (err) {
     console.error("Error startInterview:", err)
-    res.status(500).json({ success: false, message: "Failed to start interview" })
+    const status = err?.status || 503
+    res.status(status).json({
+      success: false,
+      message:
+        status === 503
+          ? "AI is busy right now. Please try again in a moment."
+          : "Failed to start interview"
+    })
   }
 }
 

@@ -32,12 +32,15 @@ export default function QuizMode() {
     try {
       const res = await api.post("/mcq/ask", { subject, topic, mode: "mcq" });
       if (res.data.success) {
-        const rawText = res.data.data.candidates[0].content.parts[0].text;
+        const rawText = res?.data?.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!rawText || typeof rawText !== "string") {
+          throw new Error("Invalid MCQ response from AI");
+        }
         const qArr = rawText
           .split(/\n(?=\d+[\.\)])/)
           .map((qBlock) => {
             const lines = qBlock.split("\n").filter(Boolean);
-            const questionText = lines[0].replace(/^\d+[\.\)]\s*/, "");
+            const questionText = (lines[0] || "").replace(/^\d+[\.\)]\s*/, "");
             const options = lines
               .filter((line) => /^[abcd][\.\)]\s/.test(line))
               .map((opt) => ({
@@ -65,6 +68,7 @@ export default function QuizMode() {
       }
     } catch (err) {
       console.error("Error loading MCQ:", err);
+      alert("AI is busy right now. Please try again.");
     }
     setLoading(false);
   };
