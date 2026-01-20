@@ -7,17 +7,28 @@ import Sidebar from "../components/sidebar.jsx";
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [analytics, setAnalytics] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-  api.get("/auth/profile")
-  .then((res) => {
-  setUser(res.data.user);
-setTimeout(() => setLoading(false), 500);})
- .catch(() => {
-        localStorage.removeItem("token");
-  navigate("/login");
-   });
+    const fetchData = async () => {
+    try {
+      const [profileRes, analyticsRes] = await Promise.all([
+        api.get("/auth/profile"),
+        api.get("/interview/analytics"),
+      ]);
+
+      setUser(profileRes.data.user);
+      setAnalytics(analyticsRes.data.data);
+    } catch (err) {
+      localStorage.removeItem("token");
+      navigate("/login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
   }, []);
 
   const logout = () => {
@@ -27,11 +38,11 @@ setTimeout(() => setLoading(false), 500);})
 
   if (loading) {
     return (
-<div className="min-h-screen bg-slate-50 flex items-center justify-center">
-<div className="relative">
-  <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
- </div>
- </div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="relative">
+        <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+      </div>
+      </div>
     );
   }
 
@@ -39,35 +50,38 @@ setTimeout(() => setLoading(false), 500);})
     <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
       <Sidebar logout={logout} />
       <main className="flex-1 p-8 overflow-y-auto h-screen">
-<header className="flex items-center justify-between mb-10"
-style={{ animation: "fadeInDown 0.6s ease-out" }}>
-<div>
-<h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard </h1>
-<p className="text-slate-500 mt-1 text-lg">Welcome back, <span className="font-medium text-indigo-600">{user?.name || "User"}</span>! 👋
- </p></div>
+        <header className="flex items-center justify-between mb-10" style={{ animation: "fadeInDown 0.6s ease-out" }}>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard </h1>
+            <p className="text-slate-500 mt-1 text-lg">Welcome back, <span className="font-medium text-indigo-600">{user?.name || "User"}</span>! 👋</p>
+          </div>
 
-<div className="flex items-center gap-4 bg-white px-5 py-2.5 rounded-full shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300">
-<div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg border-2 border-white shadow-sm">
-{user?.email ? user.email.charAt(0).toUpperCase() : "?"}</div>
-<div className="hidden md:block text-right mr-2">
-<p className="text-xs text-slate-400 uppercase font-semibold tracking-wider">Profile</p>
-<p className="text-sm font-semibold text-slate-700 leading-tight">{user.name}</p>
- </div></div>
- </header>
+          <div className="flex items-center gap-4 bg-white px-5 py-2.5 rounded-full shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300">
+            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg border-2 border-white shadow-sm">
+              {user?.email ? user.email.charAt(0).toUpperCase() : "?"}
+            </div>
+            <div className="hidden md:block text-right mr-2">
+              <p className="text-xs text-slate-400 uppercase font-semibold tracking-wider">Profile</p>
+              <p className="text-sm font-semibold text-slate-700 leading-tight">{user.name}</p>
+            </div>
+          </div>
+        </header>
 
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10"> <div
-className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
- style={{ animation: "fadeInUp 0.6s ease-out 0.1s both" }} >
-<div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
-<div className="relative z-10">
- <div className="flex items-center justify-between mb-4">
- <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-<TrendingUp size={24} /> </div>
-<span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1">
- +3 this week
-</span></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
+          style={{ animation: "fadeInUp 0.6s ease-out 0.1s both" }} >
+            <div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  <TrendingUp size={24} />
+                </div>
+                <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1">
+                  Keep practicing
+                </span>
+              </div>
               <h3 className="text-slate-500 font-medium text-sm uppercase tracking-wide">Total Interviews</h3>
-              <p className="text-4xl font-bold text-slate-800 mt-1">12</p>
+              <p className="text-4xl font-bold text-slate-800 mt-1">{analytics?.totalInterviews ?? 0}</p>
             </div>
           </div>
 
@@ -82,11 +96,11 @@ className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shad
                   <Award size={24} />
                 </div>
                 <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1">
-                  +5% improvement
+                  Keep improving 🚀
                 </span>
               </div>
               <h3 className="text-slate-500 font-medium text-sm uppercase tracking-wide">Success Score</h3>
-              <p className="text-4xl font-bold text-slate-800 mt-1">82%</p>
+              <p className="text-4xl font-bold text-slate-800 mt-1">{analytics?.successScore ?? 0}%</p>
             </div>
           </div>
           <div
@@ -104,7 +118,7 @@ className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shad
                 </span>
               </div>
               <h3 className="text-slate-500 font-medium text-sm uppercase tracking-wide">Current Streak</h3>
-              <p className="text-4xl font-bold text-slate-800 mt-1">5 <span className="text-lg text-slate-400 font-normal">Days</span></p>
+              <p className="text-4xl font-bold text-slate-800 mt-1">{analytics?.currentStreak ?? 0} <span className="text-lg text-slate-400 font-normal">Days</span></p>
             </div>
           </div>
         </div>
@@ -152,38 +166,51 @@ className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shad
 
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="divide-y divide-slate-100">
-              {[
-                { name: "DSA Mock Interview", score: 85, date: "Today, 10:30 AM", type: "Technical" },
-                { name: "System Design Basics", score: 72, date: "Yesterday, 2:15 PM", type: "Design" },
-                { name: "HR Interview Practice", score: 90, date: "Oct 24, 4:00 PM", type: "Behavioral" }
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors duration-200 group"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold
-                      ${item.score >= 80 ? 'bg-green-100 text-green-700' :
-                        item.score >= 70 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                      }`}
-                    >
-                      {item.score}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-slate-800 group-hover:text-indigo-600 transition-colors">{item.name}</h4>
-                      <div className="flex items-center gap-3 text-sm text-slate-500 mt-1">
-                        <span className="flex items-center gap-1"><FileText size={14} /> {item.type}</span>
-                        <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                        <span>{item.date}</span>
+              {analytics?.recentAttempts?.length > 0 ? (
+                analytics.recentAttempts.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors duration-200 group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold
+                          ${item.score >= 80
+                            ? "bg-green-100 text-green-700"
+                            : item.score >= 70
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-red-100 text-red-700"
+                          }`}
+                      >
+                        {item.score}
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold text-slate-800 group-hover:text-indigo-600">
+                          {item.title}
+                        </h4>
+                        <div className="flex items-center gap-3 text-sm text-slate-500 mt-1">
+                          <span className="flex items-center gap-1">
+                            <FileText size={14} /> {item.type}
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+                          <span>
+                            {new Date(item.createdAt).toLocaleString()}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
-                    <ArrowRight size={20} />
-                  </button>
+                    <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="p-6 text-center text-slate-500">
+                  No completed interviews yet
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

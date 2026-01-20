@@ -117,33 +117,50 @@ const saveUserAnswerAndEvaluate = async ({ interviewId, questionId, answerText }
   })
 
   const evalPrompt = `
-        You are a senior technical interviewer and a strict, careful grader.
+        You are a senior technical interviewer evaluating a candidate in a REAL interview setting.
 
-        Provide a detailed evaluation of the candidate's answer.
+        This is a mock interview where the candidate's spoken answer was converted to text using speech-to-text.
+        Because of this:
+        - The text may contain grammatical mistakes, missing words, or awkward phrasing.
+        - DO NOT penalize grammar, English fluency, sentence structure, or transcription errors.
+        - Focus ONLY on technical understanding, reasoning, and correctness.
+
+        Your goal is to assess understanding fairly and encourage learning.
+        Do NOT be overly strict. Reward partial correctness and correct reasoning direction.
+
+        Scoring philosophy (IMPORTANT):
+        - 9–10: Excellent answer, correct and well-explained.
+        - 7–8: Mostly correct, minor gaps or missing details.
+        - 5–6: Partially correct, shows understanding of the core idea.
+        - 3–4: Limited understanding, but some relevant points.
+        - 0–2: Mostly incorrect or irrelevant answer.
+
+        Evaluation rules:
+        - If the candidate demonstrates the correct core concept, score MUST be at least 5.
+        - Missing examples, imperfect explanation, or language issues should NOT reduce the score below 6 if the core idea is correct.
+        - Be lenient when the answer is conceptually right but not perfectly articulated.
+        - Only give very low scores (0–2) for clearly wrong or off-topic answers.
 
         Context:
         Question: ${q.text}
         Candidate answer: ${answerText}
 
-        Return EXACTLY a single JSON object (no surrounding text, no commentary, no markdown, no code fences) with these fields:
+        Return EXACTLY a single valid JSON object (no surrounding text, no markdown, no code fences) with these fields:
         {
           "score": <integer between 0 and 10>,
-          "strengths": "<one paragraph string>",
-          "weaknesses": "<one paragraph string>",
-          "advice": "<one paragraph string>"
+          "strengths": "<one concise paragraph describing what the candidate did well>",
+          "weaknesses": "<one concise paragraph describing what could be improved>",
+          "advice": "<one concise paragraph giving constructive guidance>"
         }
 
-        Rules:
-        - DO NOT return bullet points.
-        - DO NOT return an array.
-        - DO NOT return lists.
-        - "advice" MUST be a single string.
-        - ONLY return JSON.
-        - Score must be an integer between 0 and 10.
-        - Do not return any extra fields.
-        - Do not include code blocks or markdown.
-        - Keep strengths, weaknesses, and advice concise but specific.
-      `
+        Strict output rules:
+        - DO NOT use bullet points or lists.
+        - DO NOT return arrays.
+        - DO NOT add any extra fields.
+        - DO NOT include markdown or formatting.
+        - ONLY return the JSON object.
+        - Keep strengths, weaknesses, and advice concise, clear, and supportive.
+        `;
 
   let raw = await generateJSON(evalPrompt)
 
@@ -204,4 +221,72 @@ const saveUserAnswerAndEvaluate = async ({ interviewId, questionId, answerText }
   }
 }
 
-module.exports = {createInterviewSession, fetchNextQuestion, saveUserAnswerAndEvaluate}
+async function getInterviewAnalytics(userId) {
+  const interviews = await prisma.interview.findMany({
+    where: { userId: Number(userId) },
+    include: {
+      questions: {
+        select: { score: true }
+      }
+    },
+    orderBy: { createdAt: "desc" }
+  })
+
+  const totalInterviews = interviews.length
+
+  // ---- Success Score ----
+  const allScores = interviews.flatMap(i =>
+    i.questions.map(q => q.score).filter(s => s !== null)
+  )
+
+  let successScore = 0
+  if (allScores.length > 0) {
+    successScore = Math.round(
+      allScores.reduce((a, b) => a + b, 0) / allScores.length
+    )
+  }
+
+  // ---- Current Streak ----
+  const interviewDays = new Set(
+    interviews.map(i => i.createdAt.toISOString().split("T")[0])
+  )
+
+  let currentStreak = 0
+  let cursor = new Date()
+
+  while (true) {
+    const day = cursor.toISOString().split("T")[0]
+    if (interviewDays.has(day)) {
+      currentStreak++
+      cursor.setDate(cursor.getDate() - 1)
+    } else {
+      break
+    }
+  }
+
+  // ---- Recent Attempts (last 3) ----
+  const recentAttempts = interviews.slice(0, 3).map(i => {
+    const scores = i.questions.map(q => q.score).filter(s => s !== null)
+    const avgScore =
+      scores.length > 0
+        ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+        : 0
+
+    return {
+      id: i.id,
+      title: i.role,
+      score: avgScore,
+      type: "Technical",
+      createdAt: i.createdAt
+    }
+  })
+
+  return {
+    totalInterviews,
+    successScore,
+    currentStreak,
+    recentAttempts
+  }
+}
+
+module.exports = {createInterviewSession, fetchNextQuestion, saveUserAnswerAndEvaluate, getInterviewAnalytics}
