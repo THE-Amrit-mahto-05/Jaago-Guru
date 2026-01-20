@@ -1,4 +1,4 @@
-const {createInterviewSession, fetchNextQuestion, saveUserAnswerAndEvaluate} = require("./interview.service")
+const {createInterviewSession, fetchNextQuestion, saveUserAnswerAndEvaluate, getInterviewAnalytics} = require("./interview.service")
 const prisma = require("../config/db")
 
 const startInterview = async (req, res) => {
@@ -74,4 +74,22 @@ const submitAnswer = async (req, res) => {
   }
 }
 
-module.exports = {startInterview, getNextQuestion, submitAnswer}
+const getAnalytics = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const analytics = await getInterviewAnalytics(userId)
+
+    res.json({
+      success: true,
+      data: analytics
+    })
+  } catch (err) {
+    console.error("Error getInterviewAnalytics:", err)
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch interview analytics"
+    })
+  }
+}
+
+module.exports = {startInterview, getNextQuestion, submitAnswer, getAnalytics}
