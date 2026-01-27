@@ -75,7 +75,18 @@ export default function InterviewSummary() {
               </div>
               <div className="text-right">
                 <div className="text-sm text-slate-500 uppercase tracking-wide mb-1">Date</div>
-                <div className="text-slate-900 font-medium">{new Date().toLocaleDateString()}</div>
+                <div className="text-slate-900 font-medium">
+                  {
+                    new Date(summary[0].createdAt).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                  }
+                </div>
               </div>
             </div>
           </div>

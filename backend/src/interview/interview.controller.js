@@ -1,4 +1,4 @@
-const {createInterviewSession, fetchNextQuestion, saveUserAnswerAndEvaluate, getInterviewAnalytics} = require("./interview.service")
+const {createInterviewSession, fetchNextQuestion, saveUserAnswerAndEvaluate, getInterviewAnalytics, getAIInterviewHistory} = require("./interview.service")
 const prisma = require("../config/db")
 
 const startInterview = async (req, res) => {
@@ -74,6 +74,16 @@ const submitAnswer = async (req, res) => {
   }
 }
 
+const getAIHistory = async (req, res) => {
+  try {
+    const data = await getAIInterviewHistory(req.user.id);
+    res.json({ success: true, data })
+  } catch (err) {
+    console.error("Error fetching AI history:", err)
+    res.status(500).json({ success: false })
+  }
+}
+
 const getAnalytics = async (req, res) => {
   try {
     const userId = req.user.id
@@ -92,4 +102,4 @@ const getAnalytics = async (req, res) => {
   }
 }
 
-module.exports = {startInterview, getNextQuestion, submitAnswer, getAnalytics}
+module.exports = {startInterview, getNextQuestion, submitAnswer, getAnalytics, getAIHistory}

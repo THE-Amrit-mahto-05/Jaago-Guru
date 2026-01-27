@@ -157,7 +157,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-slate-800">Recent Attempts</h2>
             <button
-              onClick={() => navigate("/my-attempts")}
+              onClick={() => navigate("/ai-attempts")}
               className="text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1"
             >
               View all <ArrowRight size={16} />
@@ -201,7 +201,9 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
+                    <button
+                      onClick={() => navigate(`/interview/${item.id}/summary`)}
+                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
                       <ArrowRight size={20} />
                     </button>
                   </div>

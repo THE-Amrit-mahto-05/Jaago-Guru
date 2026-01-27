@@ -13,6 +13,7 @@ const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"))
 const StartInterview = lazy(() => import("./pages/Interview"))
 const InterviewSession = lazy(() => import("./pages/InterviewSession"))
 const InterviewSummary = lazy(() => import("./pages/InterviewSummary"))
+const AIAttempts = lazy(() => import("./pages/AIAttempts"))
 
 
 function App() {
@@ -107,6 +108,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <InterviewSummary />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/ai-attempts"
+            element={
+              <ProtectedRoute>
+                <AIAttempts />
               </ProtectedRoute>
             }
           />
