@@ -202,6 +202,11 @@ const saveUserAnswerAndEvaluate = async ({ interviewId, questionId, answerText }
       orderBy: { index: "asc" }
     })
 
+    await prisma.interview.update({
+      where: { id: Number(interviewId) },
+      data: { endedAt: new Date() }
+    });
+
     return {
       finished: true,
       summary,
@@ -221,9 +226,45 @@ const saveUserAnswerAndEvaluate = async ({ interviewId, questionId, answerText }
   }
 }
 
+async function getAIInterviewHistory(userId) {
+  const interviews = await prisma.interview.findMany({
+    where: {
+      userId: Number(userId)
+    },
+    include: {
+      questions: {
+        select: { score: true }
+      }
+    },
+    orderBy: { createdAt: "desc" }
+  })
+
+  return interviews.map(i => {
+    const scores = i.questions.map(q => q.score).filter(s => s !== null);
+    const avgScore =
+      scores.length > 0
+        ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+        : 0
+
+    const isCompleted = !!i.endedAt
+
+    return {
+      id: i.id,
+      role: i.role,
+      totalQ: i.totalQ,
+      createdAt: i.createdAt,
+      avgScore,
+      status: isCompleted ? "completed" : "in-progress"
+    }
+  })
+}
+
 async function getInterviewAnalytics(userId) {
   const interviews = await prisma.interview.findMany({
-    where: { userId: Number(userId) },
+    where: {
+      userId: Number(userId),
+      endedAt: { not: null }
+    },
     include: {
       questions: {
         select: { score: true }
@@ -248,7 +289,7 @@ async function getInterviewAnalytics(userId) {
 
   // ---- Current Streak ----
   const interviewDays = new Set(
-    interviews.map(i => i.createdAt.toISOString().split("T")[0])
+    interviews.map(i => i.endedAt.toISOString().split("T")[0])
   )
 
   let currentStreak = 0
@@ -289,4 +330,4 @@ async function getInterviewAnalytics(userId) {
   }
 }
 
-module.exports = {createInterviewSession, fetchNextQuestion, saveUserAnswerAndEvaluate, getInterviewAnalytics}
+module.exports = {createInterviewSession, fetchNextQuestion, saveUserAnswerAndEvaluate, getInterviewAnalytics, getAIInterviewHistory}

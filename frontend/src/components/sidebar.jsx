@@ -62,7 +62,14 @@ const Sidebar = () => {
 
           <SidebarItem
             icon={<FileText size={20} />}
-            label="My Attempts"
+            label="AI Interviews"
+            active={isActive("/ai-attempts")}
+            onClick={() => navigate("/ai-attempts")}
+          />
+
+          <SidebarItem
+            icon={<FileText size={20} />}
+            label="MCQ Attempts"
             active={isActive("/my-attempts")}
             onClick={() => navigate("/my-attempts")}
           />
