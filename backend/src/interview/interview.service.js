@@ -75,6 +75,7 @@ const createInterviewSession = async ({ userId, role, experience, questionCount 
     firstQuestion: {
       questionId: created[0].id,
       text: created[0].text,
+      role: interview.role,
       index: 1,
       total: questionCount
     }
@@ -106,6 +107,7 @@ const fetchNextQuestion = async (interviewId) => {
     finished: false,
     questionId: next.id,
     text: next.text,
+    role: next.interview.role,
     index: next.index,
     total: next.interview.totalQ
   }
@@ -275,28 +277,40 @@ async function getInterviewAnalytics(userId) {
 
   const totalInterviews = interviews.length
 
-  // ---- Success Score ----
-  const allScores = interviews.flatMap(i =>
-    i.questions.map(q => q.score).filter(s => s !== null)
-  )
+  // ---- Success Score (Average per Interview) ----
+  const interviewAverages = interviews
+    .map(i => {
+      const scores = i.questions.map(q => q.score).filter(s => s !== null)
+      if (scores.length === 0) return null
+
+      return scores.reduce((a, b) => a + b, 0) / scores.length
+    })
+    .filter(avg => avg !== null)
 
   let successScore = 0
-  if (allScores.length > 0) {
-    successScore = Math.round(
-      allScores.reduce((a, b) => a + b, 0) / allScores.length
-    )
+
+  if (interviewAverages.length > 0) {
+    const avgInterviewScore =
+      interviewAverages.reduce((a, b) => a + b, 0) /
+      interviewAverages.length
+    successScore = Math.round(avgInterviewScore * 10)
   }
 
   // ---- Current Streak ----
-  const interviewDays = new Set(
-    interviews.map(i => i.endedAt.toISOString().split("T")[0])
-  )
+  function getLocalDateString(date) {
+    const d = new Date(date)
+    d.setHours(0, 0, 0, 0)
+    return d.toLocaleDateString('en-CA')
+  }
+
+  const interviewDays = new Set(interviews.map(i => getLocalDateString(i.endedAt)))
 
   let currentStreak = 0
   let cursor = new Date()
+  cursor.setHours(0, 0, 0, 0)
 
   while (true) {
-    const day = cursor.toISOString().split("T")[0]
+    const day = getLocalDateString(cursor)
     if (interviewDays.has(day)) {
       currentStreak++
       cursor.setDate(cursor.getDate() - 1)

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FileText, TrendingUp, Target, Flame, Award, ArrowRight } from "lucide-react";
+import { FileText, TrendingUp, Target, Flame, Award, ArrowRight, Zap, Terminal } from "lucide-react";
 import api from "../api";
 import Sidebar from "../components/sidebar.jsx";
 
@@ -12,23 +12,23 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-    try {
-      const [profileRes, analyticsRes] = await Promise.all([
-        api.get("/auth/profile"),
-        api.get("/interview/analytics"),
-      ]);
+      try {
+        const [profileRes, analyticsRes] = await Promise.all([
+          api.get("/auth/profile"),
+          api.get("/interview/analytics"),
+        ]);
 
-      setUser(profileRes.data.user);
-      setAnalytics(analyticsRes.data.data);
-    } catch (err) {
-      localStorage.removeItem("token");
-      navigate("/login");
-    } finally {
-      setLoading(false);
-    }
-  };
+        setUser(profileRes.data.user);
+        setAnalytics(analyticsRes.data.data);
+      } catch (err) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchData();
+    fetchData();
   }, []);
 
   const logout = () => {
@@ -38,190 +38,244 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-      <div className="relative">
-        <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-      </div>
+      <div className="min-h-screen bg-[#FDFCF8] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+           <div className="w-12 h-12 border-2 border-neutral-200 border-t-neutral-900 rounded-full animate-spin"></div>
+           <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
+    <div className="min-h-screen bg-[#FDFCF8] flex font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
+      <style>{`
+        .bg-grid-pattern {
+          background-size: 40px 40px;
+          background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px),
+                            linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
+        }
+      `}</style>
+      
+      {/* Sidebar remains functional */}
       <Sidebar logout={logout} />
-      <main className="flex-1 p-8 overflow-y-auto h-screen">
-        <header className="flex items-center justify-between mb-10" style={{ animation: "fadeInDown 0.6s ease-out" }}>
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Dashboard </h1>
-            <p className="text-slate-500 mt-1 text-lg">Welcome back, <span className="font-medium text-indigo-600">{user?.name || "User"}</span>! 👋</p>
-          </div>
 
-          <div className="flex items-center gap-4 bg-white px-5 py-2.5 rounded-full shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300">
-            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg border-2 border-white shadow-sm">
-              {user?.email ? user.email.charAt(0).toUpperCase() : "?"}
-            </div>
-            <div className="hidden md:block text-right mr-2">
-              <p className="text-xs text-slate-400 uppercase font-semibold tracking-wider">Profile</p>
-              <p className="text-sm font-semibold text-slate-700 leading-tight">{user.name}</p>
-            </div>
-          </div>
-        </header>
+      <main className="flex-1 overflow-y-auto h-screen relative">
+         {/* Background Grid */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.3] pointer-events-none z-0"></div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
-          style={{ animation: "fadeInUp 0.6s ease-out 0.1s both" }} >
-            <div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                  <TrendingUp size={24} />
-                </div>
-                <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1">
-                  Keep practicing
-                </span>
+        <div className="relative z-10 p-8 max-w-7xl mx-auto">
+            
+          {/* Header: Technical & Minimal */}
+          <header className="flex items-end justify-between mb-12 border-b border-neutral-200 pb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">System Online</p>
               </div>
-              <h3 className="text-slate-500 font-medium text-sm uppercase tracking-wide">Total Interviews</h3>
-              <p className="text-4xl font-bold text-slate-800 mt-1">{analytics?.totalInterviews ?? 0}</p>
+              <h1 className="text-3xl font-bold text-neutral-900 tracking-tight leading-none">
+                Dashboard
+              </h1>
             </div>
-          </div>
 
-          <div
-            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
-            style={{ animation: "fadeInUp 0.6s ease-out 0.2s both" }}
-          >
-            <div className="absolute -right-6 -top-6 w-24 h-24 bg-purple-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-purple-50 text-purple-600 rounded-xl group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
-                  <Award size={24} />
-                </div>
-                <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full flex items-center gap-1">
-                  Keep improving 🚀
-                </span>
+            <div className="flex items-center gap-4">
+              <div className="text-right hidden md:block">
+                <p className="text-[10px] text-neutral-400 uppercase font-bold tracking-widest">Operator</p>
+                <p className="text-sm font-bold text-neutral-900">{user?.name || "User"}</p>
               </div>
-              <h3 className="text-slate-500 font-medium text-sm uppercase tracking-wide">Success Score</h3>
-              <p className="text-4xl font-bold text-slate-800 mt-1">{analytics?.successScore ?? 0}%</p>
-            </div>
-          </div>
-          <div
-            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative overflow-hidden"
-            style={{ animation: "fadeInUp 0.6s ease-out 0.3s both" }}
-          >
-            <div className="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-orange-50 text-orange-600 rounded-xl group-hover:bg-orange-600 group-hover:text-white transition-colors duration-300">
-                  <Flame size={24} className="group-hover:animate-pulse" />
-                </div>
-                <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-1 rounded-full flex items-center gap-1">
-                  Keep it up!
-                </span>
+              <div className="w-10 h-10 bg-neutral-900 text-white flex items-center justify-center font-bold text-sm rounded-sm">
+                {user?.email ? user.email.charAt(0).toUpperCase() : "?"}
               </div>
-              <h3 className="text-slate-500 font-medium text-sm uppercase tracking-wide">Current Streak</h3>
-              <p className="text-4xl font-bold text-slate-800 mt-1">{analytics?.currentStreak ?? 0} <span className="text-lg text-slate-400 font-normal">Days</span></p>
             </div>
-          </div>
-        </div>
-        <div
-          className="mb-10 relative overflow-hidden rounded-3xl shadow-xl group"
-          style={{ animation: "fadeInUp 0.6s ease-out 0.4s both" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 transition-transform duration-700 group-hover:scale-105"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full -ml-20 -mb-20 blur-2xl"></div>
+          </header>
 
-          <div className="relative p-10 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-white max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-sm font-medium mb-4 border border-white/10">
-                <Target size={16} />
-                <span>AI-Powered Practice</span>
+          {/* KPI Grid: Enhanced Minimal */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+            {/* Total Interviews */}
+            <div className="relative bg-white border border-neutral-200 p-6 overflow-hidden group hover:border-neutral-900 transition-all">
+              <div className="absolute top-0 left-0 h-full w-1 bg-neutral-900 opacity-70"></div>
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Total Sessions</span>
+                <TrendingUp size={18} className="text-neutral-400 group-hover:text-neutral-900 transition-colors"/>
               </div>
-              <h2 className="text-4xl font-bold mb-4 leading-tight">
-                Ready to ace your next interview?
-              </h2>
-              <p className="text-indigo-100 text-lg leading-relaxed">
-                Practice with our advanced AI interviewer. Get real-time feedback on your answers, body language, and tone.
-              </p>
+              <p className="text-4xl font-bold text-neutral-900 tracking-tight"> {analytics?.totalInterviews ?? 0} </p>
+              <p className="text-xs text-neutral-400 mt-2 font-mono">interviews completed</p>
             </div>
 
-            <button
-              onClick={() => navigate("/interview/start")}
-              className="shrink-0 px-8 py-4 bg-white text-indigo-600 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:bg-indigo-50 hover:scale-105 transition-all duration-300 flex items-center gap-3 group/btn"
-            >
-              Start Interview
-              <ArrowRight className="group-hover/btn:translate-x-1 transition-transform" size={20} />
-            </button>
-          </div>
-        </div>
-        <div style={{ animation: "fadeInUp 0.6s ease-out 0.5s both" }}>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-slate-800">Recent Attempts</h2>
-            <button
-              onClick={() => navigate("/ai-attempts")}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1"
-            >
-              View all <ArrowRight size={16} />
-            </button>
-          </div>
+            {/* Average Score */}
+            <div className="relative bg-white border border-neutral-200 p-6 overflow-hidden group hover:border-neutral-900 transition-all">
+              {/* Subtle background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-neutral-50 to-transparent opacity-60 pointer-events-none"></div>
+              <div className="flex items-center justify-between mb-6 relative z-10">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500"> Average Score</span>
+                <Award size={18} className="text-neutral-400 group-hover:text-neutral-900 transition-colors"/>
+              </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-            <div className="divide-y divide-slate-100">
-              {analytics?.recentAttempts?.length > 0 ? (
-                analytics.recentAttempts.map((item) => (
+              <div className="relative z-10">
+                <p className="text-4xl font-bold text-neutral-900 tracking-tight">
+                  {analytics?.successScore ?? 0}
+                  <span className="text-lg text-neutral-400 font-medium">%</span>
+                </p>
+
+                {/* Progress Bar */}
+                <div className="mt-4 h-2 bg-neutral-100 rounded-sm overflow-hidden">
                   <div
-                    key={item.id}
-                    className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors duration-200 group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold
-                          ${item.score >= 80
-                            ? "bg-green-100 text-green-700"
-                            : item.score >= 70
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-red-100 text-red-700"
-                          }`}
-                      >
-                        {item.score}
-                      </div>
+                    className={`h-full transition-all duration-700 ease-out
+                      ${
+                        analytics?.successScore >= 75
+                          ? "bg-green-600"
+                          : analytics?.successScore >= 50
+                          ? "bg-amber-500"
+                          : "bg-red-500"
+                      }`}
+                    style={{ width: `${analytics?.successScore ?? 0}%` }}
+                  />
+                </div>
+                <p className="text-xs text-neutral-400 mt-2 font-mono">overall performance</p>
+              </div>
+            </div>
 
-                      <div>
-                        <h4 className="font-semibold text-slate-800 group-hover:text-indigo-600">
-                          {item.title}
-                        </h4>
-                        <div className="flex items-center gap-3 text-sm text-slate-500 mt-1">
-                          <span className="flex items-center gap-1">
-                            <FileText size={14} /> {item.type}
-                          </span>
-                          <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                          <span>
-                            {new Date(item.createdAt).toLocaleString()}
+            {/* Active Streak */}
+            <div className="relative bg-white border border-neutral-200 p-6 overflow-hidden group hover:border-neutral-900 transition-all">
+              <div className="absolute bottom-0 right-0 text-[120px] font-bold text-neutral-50 opacity-70 select-none pointer-events-none">
+                {analytics?.currentStreak ?? 0}
+              </div>
+              <div className="flex items-center justify-between mb-6 relative z-10">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Active Streak</span>
+                <Flame size={18} className="text-neutral-400 group-hover:text-neutral-900 transition-colors"/>
+              </div>
+
+              <p className="text-4xl font-bold text-neutral-900 tracking-tight relative z-10">
+                {analytics?.currentStreak ?? 0}
+                <span className="text-lg text-neutral-400 font-medium ml-1">days</span>
+              </p>
+
+              {/* Streak Visual */}
+              <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center gap-1 relative z-10">
+                {[...Array(7)].map((_, i) => (
+                  <div key={i} className={`h-1 flex-1 ${ i < (analytics?.currentStreak % 7 || 0) ? "bg-neutral-900" : "bg-neutral-100" }`}></div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Action Banner: High Contrast Industrial */}
+          <div className="mb-12 relative overflow-hidden bg-neutral-900 text-white border border-neutral-900 shadow-xl group">
+             {/* Abstract Lines */}
+             <div className="absolute top-0 right-0 p-12 opacity-10">
+                <Terminal size={120} strokeWidth={1} />
+             </div>
+             
+            <div className="relative p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="max-w-xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 border border-white/20 rounded-sm text-xs font-mono mb-4 text-neutral-300">
+                  <Zap size={12} className="text-yellow-400 fill-yellow-400" />
+                  <span>AI SIMULATION READY</span>
+                </div>
+                <h2 className="text-3xl font-bold mb-4 tracking-tight">
+                  Start a Mock Interview
+                </h2>
+                <p className="text-neutral-400 text-sm leading-relaxed max-w-md">
+                  Practice with an AI interviewer and improve your technical and communication skills.
+                </p>
+              </div>
+
+              <button
+                onClick={() => navigate("/interview/start")}
+                className="shrink-0 px-8 py-4 bg-white text-neutral-900 rounded-sm font-bold text-sm uppercase tracking-wider hover:bg-neutral-200 transition-all flex items-center gap-3 cursor-pointer"
+              >
+                Start Interview
+                <ArrowRight size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* Recent Attempts: Data Log Style */}
+          <div>
+            <div className="flex items-center justify-between mb-6 border-b border-neutral-200 pb-2">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-neutral-900 flex items-center gap-2">
+                <Target size={16} />
+                Recent Interviews
+              </h2>
+              <button
+                onClick={() => navigate("/ai-attempts")}
+                className="text-xs font-bold text-neutral-500 hover:text-neutral-900 uppercase tracking-wider flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                View All <ArrowRight size={12} />
+              </button>
+            </div>
+
+            <div className="bg-white border border-neutral-200 rounded-sm shadow-sm">
+              {analytics?.recentAttempts?.length > 0 ? (
+                <div className="divide-y divide-neutral-100">
+                  {analytics.recentAttempts.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-5 flex items-center justify-between hover:bg-neutral-50 transition-colors duration-200 group"
+                    >
+                      <div className="flex items-center gap-6">
+                        {/* Score Badge - Squared, Technical */}
+                        <div
+                          className={`w-12 h-12 border-2 flex flex-col items-center justify-center text-sm font-bold font-mono rounded-sm transition-colors
+                            ${
+                              item.score >= 8
+                                ? "border-green-500 text-green-700 bg-green-50"
+                                : item.score >= 5
+                                ? "border-amber-400 text-amber-700 bg-amber-50"
+                                : "border-red-400 text-red-600 bg-red-50"
+                            }`}
+                        >
+                          {item.score}
+                          <span className={`text-[9px] font-semibold uppercase tracking-wider mt-1
+                            ${
+                              item.score >= 8
+                                ? "text-green-700"
+                                : item.score >= 5
+                                ? "text-amber-700"
+                                : "text-red-600"
+                            }`}
+                          >
+                            {item.score >= 8 ? "Strong" : item.score >= 5 ? "Average" : "Improve"}
                           </span>
                         </div>
+                        <div>
+                          <h4 className="font-bold text-neutral-900 text-sm group-hover:underline decoration-neutral-400 underline-offset-4 transition-all">
+                            {item.title}
+                          </h4>
+                          <div className="flex items-center gap-4 text-xs text-neutral-500 mt-1 font-mono">
+                            <span className="flex items-center gap-1 uppercase">
+                              <FileText size={12} /> {item.type}
+                            </span>
+                            <span className="text-neutral-300">|</span>
+                            <span>
+                              {new Date(item.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
 
-                    <button
-                      onClick={() => navigate(`/interview/${item.id}/summary`)}
-                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
-                      <ArrowRight size={20} />
-                    </button>
-                  </div>
-                ))
+                      <button
+                        onClick={() => navigate(`/interview/${item.id}/summary`)}
+                        className="p-2 text-neutral-300 hover:text-neutral-900 transition-colors cursor-pointer">
+                        <ArrowRight size={18} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               ) : (
-                <div className="p-6 text-center text-slate-500">
-                  No completed interviews yet
+                <div className="p-12 text-center">
+                  <div className="w-12 h-12 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4 text-neutral-400">
+                    <Terminal size={20} />
+                  </div>
+                  <p className="text-neutral-900 font-bold text-sm">No interviews yet</p>
+                  <p className="text-neutral-500 text-xs mt-1">Initialize your first interview to see results here.</p>
                 </div>
               )}
             </div>
           </div>
         </div>
       </main>
-
-      <style>{`
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-      `}</style>
     </div>
   );
 }
