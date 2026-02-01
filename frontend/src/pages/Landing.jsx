@@ -163,7 +163,7 @@ export default function Landing() {
               {/* Bigger Preview Card */}
               <div className="relative w-full max-w-xl border border-neutral-200 bg-white shadow-md rounded-sm overflow-hidden">
                 <img
-                  src="/Screenshot.png"
+                  src="/screenshot.png"
                   alt="InterviewMate Dashboard Preview"
                   className="w-full h-auto object-cover"
                 />
