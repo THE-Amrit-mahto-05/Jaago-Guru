@@ -1,9 +1,9 @@
-const { GoogleGenAI } = require("@google/genai");
-require("dotenv").config();
+const { GoogleGenAI } = require("@google/genai")
+require("dotenv").config()
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY
-});
+})
 
 async function generateAIResponse(subject, topic, prompt) {
   try {
@@ -13,9 +13,9 @@ async function generateAIResponse(subject, topic, prompt) {
         role: "user",
         parts: [{ text: prompt }]
       }]
-    });
+    })
 
-    const text = response.text?.trim() || "";
+    const text = response.text?.trim() || ""
     return {
       candidates: [
         {
@@ -26,10 +26,10 @@ async function generateAIResponse(subject, topic, prompt) {
           }
         }
       ]
-    };
+    }
 
   } catch (error) {
-    console.error("Gemini SDK Error:", error.message);
+    console.error("Gemini SDK Error:", error.message)
     return {
       candidates: [
         {
@@ -38,8 +38,8 @@ async function generateAIResponse(subject, topic, prompt) {
           }
         }
       ]
-    };
+    }
   }
 }
 
-module.exports = { generateAIResponse };
+module.exports = { generateAIResponse }

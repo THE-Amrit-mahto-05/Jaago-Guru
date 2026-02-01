@@ -1,5 +1,5 @@
 const prisma = require("../config/db");
-const { generateAIResponse } = require("./mcq.service");
+const { generateAIResponse } = require("./mcq.gemini");
 
 async function askAI(req, res) {
   try {
@@ -95,19 +95,24 @@ async function saveAttempt(req, res) {
       return res.status(400).json({ success: false, message: "Missing fields" });
     }
 
-    const data = {
-      userId: Number(authUserId),
-      subject,
-      topic,
-      correct: Number(score.correct || 0),
-      wrong: Number(score.wrong || 0),
-      total: Number((score.correct || 0) + (score.wrong || 0)),
-      timeSec: Number(time || 0),
-      selected: selectedOptions || {},
-      questions: questions || [],
-    };
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ success: false, message: "Empty attempt blocked" });
+    }
 
-    const created = await prisma.mCQAttempt.create({ data });
+    const created = await prisma.mCQAttempt.create({
+      data: {
+        userId: Number(authUserId),
+        subject,
+        topic,
+        correct: Number(score.correct || 0),
+        wrong: Number(score.wrong || 0),
+        total: Array.isArray(questions) ? questions.length : 0,
+        timeSec: Number(time || 0),
+        selected: selectedOptions || {},
+        questions: questions || [],
+      }
+    });
+
     res.json({ success: true, attemptId: created.id });
   } catch (err) {
     console.error("MCQ Attempt Save Error:", err?.message || err);
@@ -121,7 +126,10 @@ async function listAttempts(req, res) {
     if (!authUserId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
-    const rows = await prisma.mCQAttempt.findMany();
+    const rows = await prisma.mCQAttempt.findMany({
+      where: { userId: Number(authUserId) },
+      orderBy: { createdAt: "desc" }
+    });
     res.json({ success: true, attempts: rows });
   } catch (err) {
     console.error("List Attempts Error:", err?.message || err);
@@ -133,10 +141,18 @@ async function getAttemptDetails(req, res) {
   try {
     const authUserId = req.user?.id;
     const id = Number(req.params.id);
-    const attempt = await prisma.mCQAttempt.findUnique({ where: { id } });
+
+    const attempt = await prisma.mCQAttempt.findFirst({
+      where: {
+        id,
+        userId: Number(authUserId)
+      }
+    });
+
     if (!attempt || attempt.userId !== Number(authUserId)) {
       return res.status(404).json({ success: false, message: "Not found" });
     }
+
     res.json({ success: true, attempt });
   } catch (err) {
     console.error("Attempt Details Error:", err?.message || err);

@@ -3,7 +3,7 @@ const express = require('express')
 const cors = require("cors")
 const authRoutes = require("./auth/auth.route")
 const interviewRoutes = require("./interview/interview.route")
-const mcqRoutes = require("./mcq/mcq.router.js");
+const mcqRoutes = require("./mcq/mcq.route.js");
 const PORT = process.env.PORT || 3000;
 
 const app = express()
