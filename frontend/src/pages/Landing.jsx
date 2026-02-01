@@ -6,11 +6,11 @@ import {
   BarChart3,
   LibraryBig,
   Zap,
-  Clapperboard,
   Target,
   BrainCircuit,
   ArrowRight,
-  Star
+  CheckCircle2,
+  BookOpen
 } from "lucide-react";
 
 export default function Landing() {
@@ -49,80 +49,44 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 overflow-x-hidden selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="min-h-screen bg-[#FDFCF8] font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <style>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        @keyframes scroll-left {
+        @keyframes ticker {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
+        .animate-ticker {
+          animation: ticker 40s linear infinite;
         }
-        @keyframes pulse-glow {
-          0%, 100% { 
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3),
-                        0 0 40px rgba(139, 92, 246, 0.2),
-                        0 20px 60px rgba(0, 0, 0, 0.1);
-          }
-          50% { 
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5),
-                        0 0 60px rgba(139, 92, 246, 0.3),
-                        0 25px 80px rgba(0, 0, 0, 0.15);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        .glass-nav {
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(10px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-        }
-        .animate-scroll {
-          animation: scroll-left 25s linear infinite;
-        }
-        .scroll-track {
+        .ticker-track {
           display: flex;
           width: max-content;
         }
-        .hero-image-wrapper {
-          animation: float 6s ease-in-out infinite;
-        }
-        .hero-image-inner {
-          animation: pulse-glow 4s ease-in-out infinite;
+        /* Grid Background Pattern */
+        .bg-grid-pattern {
+          background-size: 40px 40px;
+          background-image: linear-gradient(to right, #e5e5e5 1px, transparent 1px),
+                            linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
         }
       `}</style>
 
-      {/* Navbar */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrollY > 20 ? 'glass-nav py-4 shadow-sm' : 'bg-transparent py-6'}`}>
+      {/* Navbar: Utilitarian, Solid, Bordered */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-200 border-b border-neutral-200 ${scrollY > 20 ? 'bg-[#FDFCF8]/95 backdrop-blur-sm py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
-              <BrainCircuit className="text-white" size={24} />
+          <div className="flex items-center gap-3 group cursor-default">
+            <div className="w-8 h-8 bg-neutral-900 rounded-sm flex items-center justify-center">
+              <BrainCircuit className="text-white" size={18} />
             </div>
-            <span className="text-[1.375rem] font-semibold tracking-[0.055em] text-slate-900 font-['Plus_Jakarta_Sans']">
-              Interview<span className="text-indigo-600 font-bold">Mate</span>
+            <span className="text-lg font-bold tracking-tight text-neutral-900">
+              InterviewMate
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             {user ? (
               <button
                 onClick={() => navigate("/dashboard")}
-                className="px-6 py-2.5 bg-indigo-600 text-white rounded-full font-medium hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-0.5"
+                className="px-5 py-2 bg-neutral-900 text-white text-sm font-medium rounded-sm hover:bg-neutral-800 transition-colors cursor-pointer"
               >
                 Go to Dashboard
               </button>
@@ -131,14 +95,14 @@ export default function Landing() {
                 <button
                   onClick={() => navigate("/login")}
                   onMouseEnter={() => import("./Login")}
-                  className="px-5 py-2.5 text-slate-600 font-medium hover:text-indigo-600 transition-colors"
+                  className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors cursor-pointer"
                 >
                   Log in
                 </button>
                 <button
                   onClick={() => navigate("/signup")}
                   onMouseEnter={() => import("./SignUp")}
-                  className="px-6 py-2.5 bg-indigo-600 text-white rounded-full font-medium hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-0.5"
+                  className="px-5 py-2 border border-neutral-900 text-neutral-900 text-sm font-bold rounded-sm hover:bg-neutral-900 hover:text-white transition-all duration-200 cursor-pointer"
                 >
                   Sign up free
                 </button>
@@ -148,165 +112,166 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        {/* Background Blobs */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-          <div className="absolute top-0 right-1/4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-1/3 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-        </div>
+      {/* Hero Section: Editorial Layout */}
+      <section className="relative pt-32 pb-24 border-b border-neutral-200">
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.4] z-0 pointer-events-none"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Content */}
+            <div className="lg:col-span-7 pt-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-neutral-100 border border-neutral-200 rounded-full mb-8">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span className="text-xs font-mono text-neutral-600 uppercase tracking-wider">AI Interview Practice Platform</span>
+              </div>
+              
+              <h1 className="text-5xl lg:text-7xl font-semibold tracking-tighter text-neutral-900 mb-8 leading-[1.1]">
+                Practice smarter. <br />
+                <span className="text-neutral-500">Perform better.</span>
+              </h1>
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
-          <h1 className="text-5xl lg:text-7xl font-bold tracking-tight text-slate-900 mb-6 leading-tight max-w-4xl mx-auto">
-            Master your next interview with <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">AI-powered</span> practice.
-          </h1>
+              <p className="text-xl text-neutral-600 mb-10 max-w-xl leading-relaxed font-light border-l-2 border-neutral-300 pl-6">
+                Practice technical, behavioral, and system design interviews with instant AI feedback to improve every attempt.
+              </p>
 
-          <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Get real-time feedback on your answers, body language, and tone. Practice DSA, System Design, and Behavioral questions anytime, anywhere.
-          </p>
+              <div className="flex flex-col sm:flex-row items-start gap-4">
+                <button
+                  onClick={handleGetStarted}
+                  className="px-8 py-4 bg-neutral-900 text-white rounded-sm font-medium text-lg hover:bg-neutral-800 transition-colors flex items-center gap-3 group cursor-pointer"
+                >
+                  Start Practicing Now
+                  <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
+                </button>
+                <div className="flex items-center gap-4 px-6 py-4">
+                  <div className="flex -space-x-2">
+                    {[1,2,3].map(i => (
+                      <div key={i} className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold text-white"
+                        style={{ backgroundColor: `hsl(${i * 90}, 35%, 55%)` }}
+                      >
+                        {String.fromCharCode(64 + i)}
+                      </div>
+                    ))}
+                  </div>
+                  <span className="text-sm text-neutral-500">Used by engineers at FAANG</span>
+                </div>
+              </div>
+            </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={handleGetStarted}
-              className="px-8 py-4 bg-slate-900 text-white rounded-full font-bold text-lg hover:bg-slate-800 hover:shadow-xl transition-all duration-300 flex items-center gap-2 group"
-            >
-              Start Practicing Now
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-            </button>
-          </div>
-
-          {/* Hero Image / Dashboard Preview */}
-          <div
-            className="mt-20 relative max-w-5xl mx-auto hero-image-wrapper"
-            style={{
-              opacity: Math.min(1, 0.3 + scrollY / 300),
-              transform: `scale(${Math.min(1, 0.85 + scrollY / 1000)})`,
-            }}
-          >
-            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl blur-xl opacity-30 hero-image-inner"></div>
-            <div
-              className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transition-all duration-700 ease-out"
-              style={{
-                transform: `translateY(${Math.max(0, 40 - scrollY / 8)}px)`,
-              }}
-            >
-              <img
-                src="/screenshot.png"
-                className="w-full h-auto"
-                loading="lazy"
-                decoding="async"
-              />
+            {/* Right Image */}
+            <div className="lg:col-span-5 relative mt-8 lg:mt-0 flex items-center justify-center">
+              {/* Bigger Preview Card */}
+              <div className="relative w-full max-w-xl border border-neutral-200 bg-white shadow-md rounded-sm overflow-hidden">
+                <img
+                  src="/Screenshot.png"
+                  alt="InterviewMate Dashboard Preview"
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+              {/* Feedback Badge */}
+              <div className="absolute -bottom-6 -left-6 bg-white border border-neutral-200 p-4 shadow-sm z-20 rounded-sm">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 size={20} className="text-green-600"/>
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase font-mono">Feedback Speed</p>
+                    <p className="text-lg font-bold text-neutral-900">Instant</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Grid (Bento Style) */}
+      {/* Features Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">Everything you need to succeed</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Our platform provides comprehensive tools to help you crack technical and behavioral interviews.</p>
+          <div className="mb-16 border-b border-neutral-200 pb-12">
+             <div className="max-w-3xl">
+                <h2 className="text-3xl font-bold tracking-tight text-neutral-900">Everything You Need to Prepare</h2>
+                <p className="mt-4 text-neutral-600">Tools designed to help you practice and improve in real interview scenarios.</p>
+             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Large Item */}
-            <div className="md:col-span-2 bg-slate-50 rounded-3xl p-8 border border-slate-100 hover:border-indigo-100 transition-colors group relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Mic size={120} />
-              </div>
-              <div className="relative z-10">
-                <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mb-6">
-                  <Mic size={24} />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">AI Voice Analysis</h3>
-                <p className="text-slate-600 text-lg leading-relaxed max-w-md">
-                  Our advanced AI analyzes your speech patterns, tone, and clarity to provide actionable feedback on your communication skills.
-                </p>
-              </div>
-            </div>
-
-            {/* Tall Item */}
-            <div className="bg-slate-900 rounded-3xl p-8 text-white relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative z-10 h-full flex flex-col">
-                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-6 backdrop-blur-sm">
-                  <BarChart3 size={24} />
-                </div>
-                <h3 className="text-2xl font-bold mb-3">Deep Analytics</h3>
-                <p className="text-slate-300 leading-relaxed mb-8">
-                  Track your progress over time with detailed charts and performance metrics.
-                </p>
-                <div className="mt-auto">
-                  <div className="flex items-end gap-2 mb-2">
-                    <div className="w-8 h-12 bg-indigo-500 rounded-t-lg opacity-50"></div>
-                    <div className="w-8 h-16 bg-indigo-500 rounded-t-lg opacity-75"></div>
-                    <div className="w-8 h-24 bg-indigo-500 rounded-t-lg"></div>
-                  </div>
-                  <div className="h-px bg-white/20 w-full"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Standard Items */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
             {[
-              { title: "Question Bank", desc: "500+ curated questions across all topics.", icon: <LibraryBig size={24} />, color: "bg-blue-100 text-blue-600" },
-              { title: "Instant Feedback", desc: "Get detailed feedback within seconds.", icon: <Zap size={24} />, color: "bg-yellow-100 text-yellow-600" },
-              { title: "Mock Interviews", desc: "Realistic simulations of actual interviews.", icon: <Target size={24} />, color: "bg-green-100 text-green-600" },
+              { 
+                icon: Mic, 
+                title: "Voice Analysis", 
+                desc: "Get feedback on your speaking pace, clarity, and confidence." 
+              },
+              { 
+                icon: BarChart3, 
+                title: "Progress Tracking", 
+                desc: "See how your skills improve over time with detailed charts." 
+              },
+              { 
+                icon: BookOpen, 
+                title: "Technical Quizzes", 
+                desc: "Test your knowledge with topic-specific multiple choice questions." 
+              },
+              { 
+                icon: LibraryBig, 
+                title: "Question Bank", 
+                desc: "Access 500+ real interview questions from top companies." 
+              },
+              { 
+                icon: Zap, 
+                title: "Instant Feedback", 
+                desc: "Receive immediate tips on how to improve your answers." 
+              },
+              { 
+                icon: Target, 
+                title: "Mock Interviews", 
+                desc: "Simulate real interviews to get used to the pressure." 
+              },
             ].map((item, i) => (
-              <div key={i} className="bg-slate-50 rounded-3xl p-8 border border-slate-100 hover:border-indigo-100 transition-colors group">
-                <div className={`w-12 h-12 ${item.color} rounded-2xl flex items-center justify-center mb-6`}>
-                  {item.icon}
+              <div key={i} className="group flex flex-col items-start p-6 border border-neutral-200 hover:border-neutral-900 transition-colors duration-300 bg-neutral-50/50">
+                <div className="mb-6 p-2 bg-white border border-neutral-200 rounded-sm text-neutral-900 group-hover:bg-neutral-900 group-hover:text-white transition-colors">
+                  <item.icon size={20} strokeWidth={1.5} />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-slate-600">{item.desc}</p>
+                <h3 className="text-lg font-bold text-neutral-900 mb-3">{item.title}</h3>
+                <p className="text-neutral-600 text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-24 bg-slate-50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
-          <h2 className="text-3xl font-bold text-slate-900">Loved by developers</h2>
+      {/* Testimonials: The "Ticker Tape" Data Feed */}
+      <section className="py-20 border-y border-neutral-200 bg-[#FDFCF8] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 mb-10 flex items-center justify-between">
+          <h2 className="text-sm font-mono uppercase tracking-widest text-neutral-500">Success Stories</h2>
+          <div className="h-px bg-neutral-200 flex-1 ml-6"></div>
         </div>
 
-        <div className="relative w-full overflow-hidden">
-          <div className="scroll-track animate-scroll gap-6">
+        <div className="relative w-full">
+          <div className="flex animate-ticker gap-8 w-max hover:[animation-play-state:paused]">
             {(() => {
               const testimonials = [
-                { name: "Zeeshan Adeen", role: "Software Engineer at Google", text: "This platform completely changed how I prepare for interviews. The AI feedback is incredibly accurate and helpful." },
-                { name: "Ankit Singh Yadav", role: "Senior Developer at Meta", text: "The mock interview sessions feel incredibly realistic. I landed my dream job thanks to the practice I got here." },
-                { name: "Gaurav Gehlot", role: "Tech Lead at Amazon", text: "The system design questions are particularly well-crafted. They mirror real interview scenarios perfectly." },
-                { name: "Aanchal Tiwari", role: "Full Stack Engineer at Netflix", text: "I love the instant feedback feature. It's like having a personal interview coach available 24/7." },
-                { name: "Ankur Singh", role: "Backend Engineer at Stripe", text: "The DSA practice module helped me strengthen my algorithm skills significantly. Highly recommend!" },
-                { name: "Pranav Tyagi", role: "Frontend Developer at Uber", text: "The behavioral question practice was a game-changer. I felt so much more confident in my interviews." },
-                { name: "Krushn Dayshmookh", role: "ML Engineer at OpenAI", text: "Outstanding platform! The AI analysis of my responses helped me identify and fix my weak points quickly." },
-                { name: "ShivShakti Sir", role: "DevOps Engineer at Microsoft", text: "The voice analysis feature is incredible. It helped me improve my communication skills tremendously." },
-                { name: "Adhyyan Awasthi", role: "Software Engineer at Google", text: "This platform completely changed how I prepare for interviews. The AI feedback is incredibly accurate and helpful." },
-                { name: "Purva Khasid", role: "Senior Developer at Meta", text: "The mock interview sessions feel incredibly realistic. I landed my dream job thanks to the practice I got here." },
-                { name: "Ishika Sahu", role: "Tech Lead at Amazon", text: "The system design questions are particularly well-crafted. They mirror real interview scenarios perfectly." },
-                { name: "Anshul Jhori", role: "Full Stack Engineer at Netflix", text: "I love the instant feedback feature. It's like having a personal interview coach available 24/7." },
+                { name: "Zeeshan Adeen", role: "Google", text: "Feedback accuracy is remarkably high." },
+                { name: "Ankit Singh Yadav", role: "Meta", text: "Mock sessions mirror reality perfectly." },
+                { name: "Gaurav Gehlot", role: "Amazon", text: "System design module is top tier." },
+                { name: "Aanchal Tiwari", role: "Netflix", text: "Instant coaching loop is effective." },
+                { name: "Ankur Singh", role: "Stripe", text: "Strengthened my algorithm intuition." },
+                { name: "Pranav Tyagi", role: "Uber", text: "Behavioral prep felt genuinely useful." },
+                { name: "Krushn Dayshmookh", role: "OpenAI", text: "Identified weak points immediately." },
+                { name: "ShivShakti Sir", role: "Microsoft", text: "Communication analysis is key." },
+                { name: "Adhyyan Awasthi", role: "Google", text: "This platform completely changed how I prepare." },
+                { name: "Purva Kashid", role: "Meta", text: "Landed my dream job thanks to the practice." },
+                { name: "Ishika Sahu", role: "Amazon", text: "The system design questions are well-crafted." },
+                { name: "Anshul Johri", role: "Netflix", text: "Like having a personal coach available 24/7." }
               ];
-              return [...testimonials, ...testimonials].map((testimonial, i) => (
-                <div key={i} className="w-96 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex-shrink-0">
-                  <div className="flex gap-1 text-yellow-400 mb-4">
-                    {[...Array(5)].map((_, j) => <Star key={j} size={20} fill="currentColor" />)}
-                  </div>
-                  <p className="text-slate-700 mb-6 leading-relaxed">
-                    "{testimonial.text}"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name)}&background=random&color=fff`}
-                      alt={testimonial.name}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
+              return [...testimonials, ...testimonials].map((t, i) => (
+                <div key={i} className="w-80 p-6 bg-white border border-neutral-200 flex-shrink-0 flex flex-col justify-between h-48">
+                  <p className="text-neutral-800 font-serif italic text-lg leading-snug">"{t.text}"</p>
+                  <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center justify-between">
                     <div>
-                      <p className="font-bold text-slate-900 text-sm">{testimonial.name}</p>
-                      <p className="text-slate-500 text-xs">{testimonial.role}</p>
+                      <p className="font-bold text-neutral-900 text-xs uppercase tracking-wide">{t.name}</p>
+                      <p className="text-neutral-500 text-xs font-mono mt-1">Engineer @ {t.role}</p>
+                    </div>
+                    <div className="flex gap-0.5">
+                        {[...Array(5)].map((_, j) => <div key={j} className="w-1 h-1 bg-neutral-900 rounded-full"></div>)}
                     </div>
                   </div>
                 </div>
@@ -316,34 +281,52 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA & Footer */}
-      <section className="py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="bg-indigo-600 rounded-3xl p-12 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-            <div className="relative z-10">
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Ready to land your dream job?</h2>
-              <p className="text-indigo-100 text-lg mb-8 max-w-2xl mx-auto">Join thousands of developers who are using InterviewMate to master their technical interviews.</p>
-              <button onClick={handleGetStarted} className="px-10 py-4 bg-white text-indigo-600 rounded-full font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300" > Get Started for Free </button>
-            </div>
-          </div>
+      {/* CTA: High Contrast, Minimal */}
+      <section className="py-32 bg-neutral-900 text-white relative overflow-hidden">
+        {/* Abstract lines */}
+        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none">
+           <svg width="100%" height="100%">
+              <pattern id="lines" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                 <path d="M0 40L40 0H20L0 20M40 40V20L20 40" stroke="white" strokeWidth="1" fill="none"/>
+              </pattern>
+              <rect width="100%" height="100%" fill="url(#lines)"/>
+           </svg>
+        </div>
+
+        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-8">
+            Ready to land your dream job?
+          </h2>
+          <p className="text-neutral-400 text-lg mb-12 max-w-2xl mx-auto">
+            Join thousands of developers using InterviewMate to master their technical interviews.
+          </p>
+          <button 
+            onClick={handleGetStarted} 
+            className="px-10 py-5 bg-white text-neutral-900 font-bold text-lg hover:bg-neutral-200 transition-colors inline-flex items-center gap-2 cursor-pointer"
+          > 
+            Start Free Practice
+            <ArrowRight size={20}/>
+          </button>
         </div>
       </section>
 
-      <footer className="bg-slate-50 py-12 border-t border-slate-200">
+      {/* Footer: Simple, Clean */}
+      <footer className="bg-[#FDFCF8] py-12 border-t border-neutral-200 text-sm">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
-              <BrainCircuit className="text-white" size={20} />
+            <div className="w-6 h-6 bg-neutral-900 rounded-sm flex items-center justify-center">
+              <BrainCircuit className="text-white" size={14} />
             </div>
-            <span className="text-lg font-bold text-slate-900">InterviewMate</span>
+            <span className="font-bold text-neutral-900 tracking-tight">InterviewMate</span>
           </div>
-          <div className="text-slate-500 text-sm">
+          
+          <div className="text-neutral-500 font-mono">
             © {new Date().getFullYear()} InterviewMate. All rights reserved.
           </div>
-          <div className="flex gap-6">
-            <a href="https://github.com/THE-Amrit-mahto-05/Jaago-Guru" className="text-slate-500 hover:text-indigo-600 transition-colors">GitHub</a>
-            <a href="#" className="text-slate-500 hover:text-indigo-600 transition-colors">LinkedIn</a>
+          
+          <div className="flex gap-8">
+            <a href="https://github.com/THE-Amrit-mahto-05/Jaago-Guru" className="text-neutral-500 hover:text-neutral-900 transition-colors uppercase tracking-wider text-xs font-bold">GitHub</a>
+            <a href="https://www.linkedin.com/feed/" className="text-neutral-500 hover:text-neutral-900 transition-colors uppercase tracking-wider text-xs font-bold">LinkedIn</a>
           </div>
         </div>
       </footer>
