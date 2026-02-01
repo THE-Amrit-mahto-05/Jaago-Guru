@@ -1,4 +1,4 @@
-# Jaago-Guru: AI Interview Platform
+# InterviewMate: AI Interview Platform
 
 > An AI-powered web platform that helps users practice interviews, receive intelligent feedback, and track progress — built with React, Node.js, Express, Prisma ORM ,Postgresql, and Gemini API.
 
@@ -115,14 +115,14 @@ Build a web platform where users can:
 ## 8. Development Roadmap
 
 ### Week 1 – Setup & Authentication
-- Setup React, Node, and Postgrel 
-- Implement JWT authentication  
+- Setup React, Node, and Postgres
+- Implement JWT authentication
 - Setup frontend routing (React Router)
 
 ### Week 2 – Core Interview System
-- Integrate Gemini API  
-- Generate and display AI questions  
-- Build chat-like interface for Q&A  
+- Integrate Gemini API
+- Generate and display AI questions
+- Build chat-like interface for Q&A
 - Store user answers and feedback in database  
 
 ### Week 3 – Dashboard + History
@@ -147,8 +147,8 @@ Build a web platform where users can:
 ### Step 1: Clone the Repository
 
 ```
-git clone https://github.com/your-username/jaago-guru.git
-cd jaago-guru
+git clone https://github.com/THE-Amrit-mahto-05/InterviewMate.git
+cd InterviewMate
 ```
 
 
@@ -184,7 +184,7 @@ VITE_DEEPGRAM_API_KEY=api_key_for_ai_voice_interview
 ```
 ### Step 5: Connect Frontend and Backend
 ```
-VITE_API_URL=https://jaago-guru.onrender.com
+VITE_API_URL=https://interviewmate-ai-o62p.onrender.com
 ```
 
 ## 8. Contributors
