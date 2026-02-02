@@ -20,10 +20,20 @@ function App() {
   return (
     <BrowserRouter>
       <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-slate-500 font-medium animate-pulse">Loading experience...</p>
+        <div className="min-h-screen flex items-center justify-center bg-[#FDFCF8]">
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative w-16 h-16">
+              <div className="absolute inset-0 border-4 border-neutral-200 rounded-full"></div>
+              <div className="absolute inset-0 border-4 border-t-neutral-900 rounded-full animate-spin"></div>
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-semibold text-neutral-900">
+                Preparing your workspace
+              </p>
+              <p className="text-xs text-neutral-500 mt-1">
+                This won’t take long
+              </p>
+            </div>
           </div>
         </div>
       }>
@@ -124,7 +134,7 @@ function App() {
         </Routes>
       </Suspense>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App
