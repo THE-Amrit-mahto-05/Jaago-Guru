@@ -1,7 +1,6 @@
-// client/src/pages/InterviewSummary.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { BarChart3, TrendingUp, AlertTriangle, Lightbulb, FileText, CheckCircle2, Home, Award } from "lucide-react";
+import { BarChart3, TrendingUp, AlertTriangle, Lightbulb, FileText, CheckCircle2, Home, Award, Terminal, Target } from "lucide-react";
 import api from "../api";
 import Sidebar from "../components/sidebar";
 
@@ -33,7 +32,6 @@ export default function InterviewSummary() {
     })();
   }, [interviewId, navigate]);
 
-  // Calculate statistics
   const averageScore = summary.length > 0
     ? (summary.reduce((acc, q) => acc + (q.score || 0), 0) / summary.length).toFixed(1)
     : 0;
@@ -44,224 +42,175 @@ export default function InterviewSummary() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex bg-slate-50">
+      <div className="min-h-screen flex bg-[#FDFCF8] font-sans text-neutral-900">
         <Sidebar />
         <main className="flex-1 p-8 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <h2 className="text-xl font-semibold text-slate-700">Loading Interview Analysis...</h2>
-          </div>
+            <div className="text-center">
+               <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-900 rounded-full animate-spin mx-auto mb-4"></div>
+               <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">Preparing your report...</p>
+            </div>
         </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
+    <div className="min-h-screen flex bg-[#FDFCF8] font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <Sidebar />
-      <main className="flex-1 p-8">
-        <div className="max-w-6xl mx-auto">
+      <main className="flex-1 p-8 overflow-y-auto h-screen relative">
+         <div className="absolute inset-0 pointer-events-none opacity-[0.4]"
+             style={{
+                backgroundImage: `linear-gradient(to right, #e5e5e5 1px, transparent 1px), linear-gradient(to bottom, #e5e5e5 1px, transparent 1px)`,
+                backgroundSize: '40px 40px'
+             }}>
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
 
           {/* Report Header */}
-          <div className="bg-white border-l-4 border-blue-600 rounded-lg shadow-sm p-8 mb-6">
-            <div className="flex items-start justify-between">
+          <div className="bg-white border border-neutral-200 p-8 shadow-sm mb-8 relative overflow-hidden">
+             <div className="absolute top-0 right-0 p-6 opacity-[0.05]">
+                <FileText size={120} />
+             </div>
+            <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <FileText className="text-blue-600" size={32} strokeWidth={2} />
-                  <h1 className="text-3xl font-bold text-slate-900">Interview Performance Report</h1>
-                </div>
-                <p className="text-slate-600 text-lg">Detailed Analysis & Feedback</p>
-                <p className="text-sm text-slate-500 mt-1">Interview ID: #{interviewId}</p>
-              </div>
-              <div className="text-right">
-                <div className="text-sm text-slate-500 uppercase tracking-wide mb-1">Date</div>
-                <div className="text-slate-900 font-medium">
-                  {
-                    new Date(summary[0].createdAt).toLocaleString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                  }
-                </div>
+                 <div className="flex items-center gap-2 mb-2">
+                    <span className="w-2 h-2 bg-neutral-900 rounded-full"></span>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Interview Completed</p>
+                 </div>
+                 <h1 className="text-3xl font-bold text-neutral-900 tracking-tight mb-2">Performance Report</h1>
+                 <div className="flex items-center gap-4 text-xs font-mono text-neutral-500">
+                    <span>{new Date(summary[0].createdAt).toLocaleString()}</span>
+                 </div>
               </div>
             </div>
           </div>
 
-          {/* Performance Overview */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <BarChart3 className="text-blue-600" size={24} />
-              Performance Overview
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="border border-slate-200 rounded-lg p-4">
-                <div className="text-sm text-slate-600 mb-1">Total Questions</div>
-                <div className="text-3xl font-bold text-slate-900">{summary.length}</div>
-              </div>
-
-              <div className="border border-slate-200 rounded-lg p-4">
-                <div className="text-sm text-slate-600 mb-1">Total Score</div>
-                <div className="text-3xl font-bold text-blue-600">{totalPoints}/{maxPoints}</div>
-              </div>
-
-              <div className="border border-slate-200 rounded-lg p-4">
-                <div className="text-sm text-slate-600 mb-1">Average Score</div>
-                <div className="text-3xl font-bold text-purple-600">{averageScore}/10</div>
-              </div>
-
-              <div className="border border-slate-200 rounded-lg p-4">
-                <div className="text-sm text-slate-600 mb-1">Overall Performance</div>
-                <div className="text-3xl font-bold text-slate-900">{percentage}%</div>
-              </div>
-            </div>
-
-            {/* Performance Bar */}
-            <div className="mt-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-slate-700">Performance Level</span>
-                <span className="text-sm font-medium text-slate-900">{percentage}%</span>
-              </div>
-              <div className="w-full bg-slate-200 rounded-full h-4 overflow-hidden">
-                <div
-                  className={`h-4 rounded-full transition-all ${percentage >= 80 ? 'bg-green-500' :
-                    percentage >= 60 ? 'bg-blue-500' :
-                      percentage >= 40 ? 'bg-yellow-500' : 'bg-red-500'
-                    }`}
-                  style={{ width: `${percentage}%` }}
-                ></div>
-              </div>
-              <div className="flex justify-between mt-1 text-xs text-slate-500">
-                <span>Poor</span>
-                <span>Fair</span>
-                <span>Good</span>
-                <span>Excellent</span>
-              </div>
-            </div>
+          {/* Performance Overview Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+             <div className="bg-white border border-neutral-200 p-6 shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Questions</p>
+                <p className="text-3xl font-bold text-neutral-900 font-mono">{summary.length}</p>
+             </div>
+             
+             <div className="bg-white border border-neutral-200 p-6 shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Total Score</p>
+                <p className="text-3xl font-bold text-neutral-900 font-mono">{totalPoints}<span className="text-lg text-neutral-400">/{maxPoints}</span></p>
+             </div>
+             
+             <div className="bg-white border border-neutral-200 p-6 shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Average Score</p>
+                <p className="text-3xl font-bold text-neutral-900 font-mono">{averageScore}</p>
+             </div>
+             
+             <div className="bg-neutral-900 text-white p-6 shadow-sm">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Overall Performance</p>
+                <p className="text-3xl font-bold font-mono">{percentage}%</p>
+             </div>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <p className="text-red-700 font-medium">{error}</p>
+            <div className="bg-red-50 border-l-2 border-red-500 p-4 mb-6">
+              <p className="text-red-700 font-bold text-xs uppercase">{error}</p>
             </div>
           )}
 
           {/* Detailed Question Analysis */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-              <Award className="text-blue-600" size={24} />
-              Detailed Question Analysis
-            </h2>
-
-            <div className="space-y-6">
-              {summary.map((q, index) => (
-                <div key={q.id} className="border border-slate-200 rounded-lg overflow-hidden">
-
-                  {/* Question Header */}
-                  <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-lg font-bold text-sm">
-                            {q.index}
-                          </span>
-                          <h3 className="text-lg font-semibold text-slate-900">
-                            {q.text}
-                          </h3>
-                        </div>
-                      </div>
-
-                      {/* Score Display */}
-                      <div className="text-right">
-                        <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Score</div>
-                        <div className={`text-2xl font-bold ${(q.score || 0) >= 8 ? 'text-green-600' :
-                          (q.score || 0) >= 5 ? 'text-yellow-600' : 'text-red-600'
-                          }`}>
-                          {q.score ?? "0"}/10
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Question Body */}
-                  <div className="p-6 space-y-5">
-
-                    {/* Your Response */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle2 className="text-slate-600" size={18} />
-                        <h4 className="font-semibold text-slate-900 text-sm uppercase tracking-wide">Your Response</h4>
-                      </div>
-                      <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                        <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">
-                          {q.userAnswer || "No response recorded"}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Analysis Grid */}
-                    <div className="grid md:grid-cols-2 gap-4">
-
-                      {/* Strengths */}
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <TrendingUp className="text-green-600" size={18} />
-                          <h4 className="font-semibold text-slate-900 text-sm uppercase tracking-wide">Strengths Identified</h4>
-                        </div>
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                          <p className="text-green-900 text-sm leading-relaxed">
-                            {q.strengths || "No specific strengths identified"}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Areas for Improvement */}
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle className="text-orange-600" size={18} />
-                          <h4 className="font-semibold text-slate-900 text-sm uppercase tracking-wide">Areas for Improvement</h4>
-                        </div>
-                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-                          <p className="text-orange-900 text-sm leading-relaxed">
-                            {q.weaknesses || "No specific weaknesses identified"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Recommendations */}
-                    {q.advice && (
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Lightbulb className="text-blue-600" size={18} />
-                          <h4 className="font-semibold text-slate-900 text-sm uppercase tracking-wide">Recommendations</h4>
-                        </div>
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                          <p className="text-blue-900 text-sm leading-relaxed whitespace-pre-wrap">
-                            {q.advice}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                  </div>
-                </div>
-              ))}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 border-b border-neutral-200 pb-2 mb-4">
+               <Award size={18} className="text-neutral-500"/>
+               <h2 className="text-sm font-bold uppercase tracking-widest text-neutral-900">Question-by-Question Feedback</h2>
             </div>
+
+            {summary.map((q, index) => (
+              <div key={q.id} className="bg-white border border-neutral-200 shadow-sm overflow-hidden group">
+                
+                {/* Header */}
+                <div className="bg-neutral-50 px-6 py-4 border-b border-neutral-200 flex items-start justify-between gap-4">
+                   <div className="flex gap-4">
+                      <span className="w-8 h-8 flex items-center justify-center bg-white border border-neutral-200 text-neutral-500 font-mono text-sm font-bold rounded-sm">
+                         {String(q.index).padStart(2, '0')}
+                      </span>
+                      <div>
+                         <h3 className="text-lg font-medium text-neutral-900 leading-tight pt-1">{q.text}</h3>
+                      </div>
+                   </div>
+                   
+                   <div className="text-right flex-shrink-0">
+                      <div className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-1">Score</div>
+                      <div className={`text-xl font-bold font-mono 
+                         ${(q.score || 0) >= 8 ? 'text-green-600' : (q.score || 0) >= 5 ? 'text-amber-600' : 'text-red-600'}`}>
+                         {q.score ?? "0"}/10
+                      </div>
+                   </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6 space-y-6">
+                  
+                  {/* Response */}
+                  <div className="relative pl-4 border-l-2 border-neutral-200">
+                     <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Your Response</p>
+                     <p className="text-sm text-neutral-700 leading-relaxed font-mono">
+                        "{q.userAnswer || "No answer recorded."}"
+                     </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                     {/* Strengths */}
+                     <div className="bg-green-100/60 border border-green-200 p-5 rounded-sm">
+                        <div className="flex items-center gap-2 mb-3">
+                           <TrendingUp size={16} className="text-green-800"/>
+                           <h4 className="text-xs font-bold uppercase tracking-widest text-green-900">
+                           What You Did Well
+                           </h4>
+                        </div>
+                        <p className="text-sm text-neutral-700 leading-relaxed">
+                           {q.strengths || "None identified."}
+                        </p>
+                     </div>
+                     
+                     {/* Weaknesses */}
+                     <div className="bg-red-100/60 border border-red-200 p-5 rounded-sm">
+                        <div className="flex items-center gap-2 mb-3">
+                           <AlertTriangle size={16} className="text-red-800"/>
+                           <h4 className="text-xs font-bold uppercase tracking-widest text-red-900">
+                           Areas to Improve
+                           </h4>
+                        </div>
+                        <p className="text-sm text-neutral-700 leading-relaxed">
+                           {q.weaknesses || "None identified."}
+                        </p>
+                     </div>
+                  </div>
+
+                  {/* Recommendations */}
+                  {q.advice && (
+                     <div className="bg-blue-50/60 border border-blue-200 p-5 rounded-sm">
+                        <div className="flex items-center gap-2 mb-3">
+                        <Lightbulb size={16} className="text-blue-700"/>
+                        <h4 className="text-xs font-bold uppercase tracking-widest text-blue-900">
+                           Suggestions
+                        </h4>
+                        </div>
+                        <p className="text-sm text-neutral-800 leading-relaxed">
+                        {q.advice}
+                        </p>
+                     </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex justify-end">
+          {/* Footer Action */}
+          <div className="mt-8 pt-8 border-t border-neutral-200 flex justify-end">
             <button
               onClick={() => navigate("/dashboard")}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 px-6 py-3 bg-neutral-900 text-white rounded-sm font-bold text-sm uppercase tracking-wider hover:bg-neutral-800 transition-colors shadow-sm cursor-pointer"
             >
-              <Home size={20} />
-              Return to Dashboard
+              <Home size={16} />
+              Back to Dashboard
             </button>
           </div>
 
