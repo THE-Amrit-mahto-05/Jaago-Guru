@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "../api"
+import { BrainCircuit } from "lucide-react"
 
 export default function Login() {
   const navigate = useNavigate()
@@ -54,12 +55,10 @@ export default function Login() {
         <div className="text-center mb-10">
           <button 
             onClick={() => navigate("/")}
-            className="group inline-flex items-center gap-2 hover:opacity-80 transition-opacity"
+            className="group inline-flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
           >
             <div className="w-6 h-6 bg-neutral-900 rounded-sm flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3M3.343 19.05l.707-.707m16.598-.014l-.707.707M6.637 4.636l.707.707M9 21h6" />
-                </svg>
+              <BrainCircuit className="text-white" size={18} />
             </div>
             <span className="text-xl font-bold tracking-tight text-neutral-900">
               InterviewMate
@@ -137,7 +136,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-neutral-900 text-white text-sm font-bold uppercase tracking-widest rounded-sm hover:bg-neutral-800 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              className="w-full py-3 bg-neutral-900 text-white text-sm font-bold uppercase tracking-widest rounded-sm hover:bg-neutral-800 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-3 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -165,7 +164,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => navigate("/signup")}
-                className="text-neutral-900 font-bold hover:underline transition-all ml-1"
+                className="text-neutral-900 font-bold hover:underline transition-all ml-1 cursor-pointer"
               >
                 Sign up free
               </button>
@@ -177,7 +176,7 @@ export default function Login() {
         <div className="text-center mt-8">
           <button
             onClick={() => navigate("/")}
-            className="text-xs text-neutral-400 hover:text-neutral-900 transition-colors uppercase tracking-widest font-bold inline-flex items-center gap-2"
+            className="text-xs text-neutral-400 hover:text-neutral-900 transition-colors uppercase tracking-widest font-bold inline-flex items-center gap-2 cursor-pointer"
           >
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
