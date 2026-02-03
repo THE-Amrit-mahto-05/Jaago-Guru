@@ -1,202 +1,76 @@
-# InterviewMate: AI Interview Platform
-
-> An AI-powered web platform that helps users practice interviews, receive intelligent feedback, and track progress — built with React, Node.js, Express, Prisma ORM ,Postgresql, and Gemini API.
-
----
-
-## 1. Project Overview
-
-**Goal:**  
-Build a web platform where users can:
-- Practice interviews with an AI interviewer (speech and text)
-- Receive personalized feedback (clarity, confidence, completeness)
-- Track their performance and progress
+# 🤖 InterviewMate
+**Master your next career move with AI.** *Practice real-world interviews with an intelligent AI recruiter that listens, evaluates, and helps you grow.*
 
 ---
 
-## 2. Features (Phase-wise)
+## 🌟 The Problem
+Standard interview prep involves reading static lists of questions, which doesn't simulate the pressure or the flow of a real conversation. Job seekers often lack real-time feedback on their technical depth, voice clarity, and behavioral responses.
 
-### Phase 1 – Core MVP
-
-**Features:**
-1. User authentication (Login / Signup)  
-2. Dashboard after login  
-3. Start AI interview (chat interface)  
-4. AI asks questions based on chosen role  
-5. User can answer by typing or speaking  
-6. AI gives feedback on each answer  
-7. Store questions, answers, and scores in MySQL  
-8. View past interview history  
+**InterviewMate** bridges this gap. By combining generative AI with voice technology, it provides a safe yet realistic environment to practice technical and behavioral interviews, offering deep analytics to turn your weaknesses into strengths.
 
 ---
 
-### Phase 2 – Smart Features 
+## 🚀 What It Can Do
 
-**Add:**
-1. Role-based interviews (e.g., Frontend Developer, Data Analyst)  
-2. Experience levels (Junior / Mid / Intern / senior)  
-4. Analytics dashboard (average score, improvement chart)  
-5. AI summary feedback for full interview  
+### 🎙️ AI-Powered Voice & Text Practice
+Choose your interview mode. Practice with a realistic **AI voice** that conducts the session or use text-based inputs. The system mimics a real interviewer, asking follow-up questions based on your previous answers.
 
----
+### 🧠 Personalized Question Generation
+No more generic lists. By using **Google Gemini AI**, the platform generates specific questions based on your Job Position (e.g., React Developer, Backend Engineer) and the provided Job Description.
 
-### Phase 3 – Advanced / Bonus Features
+### 📊 Performance Analytics & Feedback
+After every session, the AI evaluates your responses. It provides a detailed breakdown of:
+* **Answer Accuracy:** How well you hit the technical requirements.
+* **Improvement Tips:** Specific advice on how to structure your answers better.
+* **Interview History:** Track your progress over time with a personal dashboard of past sessions.
 
-**Add:**
-1. Voice-based interviews (Speech-to-Text + Text-to-Speech)  
-2. Timed responses (simulate real interviews)  
-3. HR-style evaluation (soft skills, tone, confidence)  
-
----
-
-## 3. Tech Stack
-
-| Layer | Tool | Description |
-|-------|------|-------------|
-| **Frontend** | React.js | Build the user interface |
-| **Styling** | Tailwind CSS | Modern, responsive design |
-| **Backend** | Node.js + Express.js | REST API and server logic |
-| **Database** | postgresql | Store users and interview data |
-| **AI** | Gemini API | Generate questions and feedback | and Deepgram API | for AI interview
-| **Authentication** | JWT or Supabase Auth | Secure login/signup |
-| **Hosting** | Vercel (Frontend), Render (Backend) | 
+### 🔐 Secure & Personalized Workspace
+Your data and history are protected. Every user has a private dashboard to manage their specific interview history, performance metrics, and personalized MCQ results.
 
 ---
 
-## 4. AI Logic
+## 🛠️ The Tech Stack
 
-1. **Generate Questions**  
-   Prompt: “Generate 5 interview questions for a React.js developer (medium difficulty).”
 
-2. **User Answers**  
-   Store responses temporarily in frontend state.
 
-3. **AI Feedback**  
-   Prompt: “Evaluate this answer for clarity, correctness, and confidence. Give score out of 10 and short feedback.”
+| Layer | Technology | Why? |
+| :--- | :--- | :--- |
+| **Frontend** | **React.js & Tailwind CSS** | For a fast, responsive, and modern user interface. |
+| **Backend** | **Node.js & Express** | Scalable server logic to handle AI processing and user data. |
+| **Database** | **PostgreSQL** | Relational data for complex interview history and analytics. |
+| **ORM** | **Prisma** | Type-safe database interactions and easy schema management. |
+| **AI Engine** | **Gemini API** | To generate context-aware questions and evaluate answers. |
+| **Voice Tech**| **Vapi AI / Web Speech API** | For realistic voice-based mock interview sessions. |
+| **Authentication** | **JWT (JSON Web Tokens)** | Secures user sessions and protects private interview data. |
+---
 
-4. **Store Everything**  
-   Save all questions, answers, and feedback to the database.
+## 🧠 How It Works (Simple Steps)
+
+1.  **🔐 Authenticate:** Log in to your secure dashboard to access your personal history.
+2.  **📋 Set the Stage:** Enter the Job Position and Description you are targeting.
+3.  **🎯 Select Mode:** Choose between Technical, Behavioral, or MCQ-based rounds.
+4.  **💬 The Interview:** Engage with the AI via voice or text as it asks tailored questions.
+5.  **📈 Get Scored:** Receive an instant, AI-driven evaluation with your "Ideal Answer" comparison.
+6.  **🔄 Improve:** Review your analytics and history to sharpen your skills for the real thing.
 
 ---
 
-## 5. API Endpoints
+## 🗂️ Project Architecture
 
-| Endpoint                      | Method | Description                                   | Notes                                             |
-|------------------------------|--------|-----------------------------------------------|--------------------------------------------------|
-| /api/auth/signup             | POST   | Register a new user                          | Validates email/password, stores in DB           |
-| /api/auth/login              | POST   | Login user                                   | Returns JWT token for authentication             |
-| /api/interview/start         | POST   | Start a new AI-generated interview session   | Generates questions using AI (gemini.js)         |
-| /api/interview/answer        | POST   | Send user's answer and receive AI feedback   | Stores answer and returns evaluation             |
-| /api/interview/history       | GET    | Fetch list of past interviews for a user     | Requires authentication                          |
-| /api/interview/details/:id   | GET    | Fetch detailed data of a specific interview  | Includes questions, answers, AI feedback         |
-| /api/mcq/list                | GET    | Fetch MCQs for a subject/topic               | Returns list of questions                        |
-| /api/mcq/submit              | POST   | Submit MCQ answers                           | Calculates score and stores results              |
-| /api/ai/analyze              | POST   | Send text or input for AI analysis           | Returns AI-generated insights or suggestions     |
-
-
-## 6. Frontend Structure
-
-| Route                      | Component           | Description                                                 |
-|----------------------------|---------------------|-------------------------------------------------------------|
-| /                          | Landing.jsx         | Landing / home page                                         |
-| /login                     | Login.jsx           | Login form for existing users                               |
-| /signup                    | SignUp.jsx          | Signup form for new users                                   |
-| /dashboard                 | Dashboard.jsx       | User dashboard; overview of past interviews, quizzes, etc.  |
-| /interview                 | Subjects.jsx        | List of subjects/topics for AI interviews or MCQs           |
-| /interview/quiz            | QuizMode.jsx        | Page to attempt MCQ quizzes                                 |
-| /interview/start           | Interview.jsx       | Start a chat-based AI interview                             |
-| /interview/:id             | InterviewSession.jsx| Active interview session                                    |
-| /interview/:id/summary     | InterviewSummary.jsx| Detailed results and AI feedback for a completed interview  |
-| /subjects                  | Subjects.jsx        | View all subjects (alternative route)                       |
-| /topics                    | Topics.jsx          | View topics under a subject                                 |
-
----
-
-## 8. Development Roadmap
-
-### Week 1 – Setup & Authentication
-- Setup React, Node, and Postgres
-- Implement JWT authentication
-- Setup frontend routing (React Router)
-
-### Week 2 – Core Interview System
-- Integrate Gemini API
-- Generate and display AI questions
-- Build chat-like interface for Q&A
-- Store user answers and feedback in database  
-
-### Week 3 – Dashboard + History
-- Create user interview history page  
-- Display past performance and analytics  
-- Improve UI with Tailwind or Material UI  
-
-### Week 4 – Polishing & Deployment
-- Add loading states and error handling  
-- Deploy on Vercel (frontend) and Render (backend)  
-- Prepare presentation and final README  
-
-*(Optional Week 5 – Add resume or voice-based features)*
-
----
-
-
----
-
-## 7. Setup Instructions
-
-### Step 1: Clone the Repository
-
-```
-git clone https://github.com/THE-Amrit-mahto-05/InterviewMate.git
-cd InterviewMate
-```
+The project is structured to separate the complex AI logic from the user interface:
 
 
 
-### Step 2: Frontend Setup
-```
-cd frontend
-npm install
-npm run dev
-```
-
-
-### Step 3: Backend Setup
-```
-cd backend
-npm install
-npm run dev
-```
-
-### Step 4: .env Backend
-
-.env file:
-```
-PORT=5000
-DATABASE_URL=postgresql****
-DIRECT_URL=postgril....
-JWT_SECRET=your_secret_key
-GEMINI_API_KEY=your_openai_api_key
-```
-### Step 5: .env Frontend
-```
-VITE_DEEPGRAM_API_KEY=api_key_for_ai_voice_interview
-```
-### Step 5: Connect Frontend and Backend
-```
-VITE_API_URL=https://interviewmate-ai-o62p.onrender.com
-```
-
-## 8. Contributors
-
-- **Amrit Kumar Mahto**  
-- **Anuj Chhajad**  
-- **Ayush Kumar**  
-- **Nakul Sharma**
-
-
-
-
-
-
-
+```text
+InterviewMate/
+ ├── frontend/
+ │    ├── components/ 
+ │    ├── pages/      
+ │    └── App.jsx     
+ ├── backend/
+ │    ├── routes/      
+ │    ├── controllers/ 
+ │    ├── middleware/  
+ │    ├── prisma/      
+ │    └── index.js     
+ └── package.json
