@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FileText, Calendar, Award, ArrowRight } from "lucide-react";
+import { FileText, Calendar, Award, ArrowRight, Terminal, Activity, Clock } from "lucide-react";
 import api from "../api";
 import Sidebar from "../components/sidebar";
 
@@ -30,103 +30,140 @@ export default function AIAttempts() {
       : attempts.filter((a) => a.status === filter);
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
+    <div className="min-h-screen flex bg-[#FDFCF8] font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <Sidebar />
-      <main className="flex-1 p-8">
-        <h1 className="text-3xl font-bold mb-4">AI Interview Attempts</h1>
-
-        {/* FILTER TABS */}
-        <div className="flex gap-3 mb-6">
-          {["all", "completed", "in-progress"].map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-full text-sm font-medium border transition
-                ${
-                  filter === f
-                    ? "bg-indigo-600 text-white border-indigo-600"
-                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-                }`}
-            >
-              {f === "all"
-                ? "All"
-                : f === "completed"
-                ? "Completed"
-                : "In Progress"}
-            </button>
-          ))}
+      <main className="flex-1 p-8 overflow-y-auto h-screen relative">
+         {/* Grid Background */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.4]"
+             style={{
+                backgroundImage: `linear-gradient(to right, #e5e5e5 1px, transparent 1px), linear-gradient(to bottom, #e5e5e5 1px, transparent 1px)`,
+                backgroundSize: '40px 40px'
+             }}>
         </div>
 
-        {loading ? (
-          <p className="text-slate-500">Loading...</p>
-        ) : filteredAttempts.length === 0 ? (
-          <p className="text-slate-500">No interviews in this category.</p>
-        ) : (
-          <div className="space-y-4">
-            {filteredAttempts.map((a) => (
-              <div
-                key={a.id}
-                className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center"
-              >
+        <div className="max-w-6xl mx-auto relative z-10">
+            {/* Header */}
+            <div className="mb-10 border-b border-neutral-200 pb-6 flex items-end justify-between">
                 <div>
-                  <h3 className="font-semibold text-slate-800">{a.role}</h3>
-
-                  <div className="flex gap-4 text-sm text-slate-500 mt-1 flex-wrap">
-                    <span className="flex items-center gap-1">
-                      <Calendar size={14} />
-                      {new Date(a.createdAt).toLocaleString()}
-                    </span>
-
-                    <span className="flex items-center gap-1">
-                      <FileText size={14} />
-                      {a.totalQ} Questions
-                    </span>
-
-                    {a.status === "completed" && (
-                      <span className="flex items-center gap-1">
-                        <Award size={14} />
-                        Score: {a.avgScore}/10
-                      </span>
-                    )}
-                  </div>
-
-                  {/* STATUS BADGE */}
-                  <div className="mt-2">
-                    <span
-                      className={`text-xs font-semibold px-2 py-1 rounded-full
-                        ${
-                          a.status === "completed"
-                            ? "bg-green-50 text-green-700"
-                            : "bg-yellow-50 text-yellow-700"
-                        }`}
-                    >
-                      {a.status === "completed"
-                        ? "Completed"
-                        : "In Progress"}
-                    </span>
-                  </div>
+                   <div className="flex items-center gap-2 mb-2">
+                      <span className="w-2 h-2 bg-neutral-900 rounded-full animate-pulse"></span>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Your Interview Activity</p>
+                   </div>
+                   <h1 className="text-3xl font-bold text-neutral-900 tracking-tight flex items-center gap-3">
+                      <Terminal size={28} strokeWidth={1.5} />
+                      AI Voice Interview History
+                   </h1>
                 </div>
+            </div>
 
-                {/* ACTION BUTTON */}
-                {a.status === "completed" ? (
+            {/* Filter Tabs */}
+            <div className="flex gap-4 mb-8">
+               {["all", "completed", "in-progress"].map((f) => (
                   <button
-                    onClick={() => navigate(`/interview/${a.id}/summary`)}
-                    className="flex items-center gap-2 text-indigo-600 hover:underline"
+                     key={f}
+                     onClick={() => setFilter(f)}
+                     className={`px-6 py-2 text-xs font-bold uppercase tracking-widest border transition-all
+                     ${filter === f 
+                        ? "bg-neutral-900 text-white border-neutral-900" 
+                        : "bg-white text-neutral-500 border-neutral-200 hover:border-neutral-400 hover:text-neutral-900 cursor-pointer"}`}
                   >
-                    View Report <ArrowRight size={16} />
+                     {f === "all" ? "All Interviews" : f === "completed" ? "Completed" : "In Progress"}
                   </button>
-                ) : (
+               ))}
+            </div>
+
+            {loading ? (
+               <div className="border border-dashed border-neutral-300 rounded-sm p-12 text-center bg-neutral-50/50">
+                  <div className="w-8 h-8 border-2 border-neutral-300 border-t-neutral-900 rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">Retrieving Data...</p>
+               </div>
+            ) : filteredAttempts.length === 0 ? (
+               <div className="border border-neutral-200 bg-white p-12 text-center shadow-sm flex flex-col items-center">
+                  <Activity className="text-neutral-300 mb-6" size={48} strokeWidth={1} />
+                  <p className="text-sm font-bold text-neutral-900 uppercase tracking-wider mb-2">No Records Found</p>
+                  <p className="text-xs text-neutral-500 mb-6 max-w-xs">Start a mock interview to see it here.</p>
                   <button
-                    onClick={() => navigate(`/interview/${a.id}`)}
-                    className="flex items-center gap-2 text-yellow-700 hover:underline"
+                     onClick={() => navigate("/interview/start")}
+                     className="px-6 py-2 bg-neutral-900 text-white text-sm font-bold uppercase tracking-wider rounded-sm hover:bg-neutral-800 transition cursor-pointer"
                   >
-                    Resume Interview <ArrowRight size={16} />
+                     Start an Interview
                   </button>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+               </div>
+            ) : (
+               <div className="space-y-4">
+                  {filteredAttempts.map((a) => (
+                     <div
+                        key={a.id}
+                        className="bg-white p-6 border border-neutral-200 hover:border-neutral-400 transition-colors shadow-sm group relative overflow-hidden"
+                     >
+                        <div className="flex justify-between items-start">
+                           <div>
+                              <div className="flex items-center gap-3 mb-2">
+                                 <span
+                                    className={`flex items-center gap-1.5 px-2 py-1 text-[10px] font-bold uppercase tracking-widest border rounded-sm
+                                       ${
+                                          a.status === "completed"
+                                          ? "bg-green-50 text-green-700 border-green-200"
+                                          : "bg-amber-50 text-amber-700 border-amber-200"
+                                       }`}
+                                    >
+                                    <span className={`w-1.5 h-1.5 rounded-full
+                                       ${a.status === "completed" ? "bg-green-600" : "bg-amber-600"}`} />
+                                    {a.status === "completed" ? "Completed" : "In Progress"}
+                                    </span>
+                              </div>
+                              
+                              <h3 className="text-lg font-bold text-neutral-900 tracking-tight mb-4 group-hover:underline decoration-neutral-300 underline-offset-4">
+                                 {a.role}
+                              </h3>
+
+                              <div className="flex gap-6 text-xs text-neutral-500 font-mono border-t border-neutral-100 pt-4">
+                                 <span className="flex items-center gap-2">
+                                    <Calendar size={14} />
+                                    {new Date(a.createdAt).toLocaleDateString()}
+                                 </span>
+
+                                 <span className="flex items-center gap-2">
+                                    <FileText size={14} />
+                                    {a.totalQ} Questions
+                                 </span>
+
+                                 {a.status === "completed" && (
+                                    <span className="flex items-center gap-2 text-neutral-900 font-bold">
+                                       <Award size={14} />
+                                       Score: {a.avgScore}/10
+                                    </span>
+                                 )}
+                              </div>
+                           </div>
+
+                           {/* Action Button */}
+                           <div className="flex items-center">
+                              {a.status === "completed" ? (
+                                 <button
+                                    onClick={() => navigate(`/interview/${a.id}/summary`)}
+                                    className="px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold uppercase tracking-wider hover:bg-indigo-100 hover:text-indigo-900 transition-colors flex items-center gap-2 cursor-pointer"
+
+                                 >
+                                    Report
+                                    <ArrowRight size={14} />
+                                 </button>
+                              ) : (
+                                 <button
+                                    onClick={() => navigate(`/interview/${a.id}`)}
+                                    className="px-4 py-2 bg-neutral-900 text-white text-xs font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors flex items-center gap-2 cursor-pointer"
+                                 >
+                                    Resume
+                                    <ArrowRight size={14} />
+                                 </button>
+                              )}
+                           </div>
+                        </div>
+                     </div>
+                  ))}
+               </div>
+            )}
+        </div>
       </main>
     </div>
   );

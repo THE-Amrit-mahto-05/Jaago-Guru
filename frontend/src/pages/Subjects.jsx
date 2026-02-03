@@ -13,6 +13,7 @@ import {
   Network,
   ChevronDown,
   BookOpen,
+  FolderOpen
 } from "lucide-react";
 import Sidebar from "../components/sidebar";
 
@@ -93,7 +94,7 @@ export default function Subjects() {
   }, [categories]);
 
   const getCategoryIcon = (cat) => {
-    const iconProps = { size: 24, strokeWidth: 2 };
+    const iconProps = { size: 18, strokeWidth: 1.5 };
     const icons = {
       "Programming Languages": <Code2 {...iconProps} />,
       "Frontend Development": <Palette {...iconProps} />,
@@ -114,68 +115,101 @@ export default function Subjects() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-[#FDFCF8] flex font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <Sidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        <div className="max-w-6xl mx-auto">
-<div className="mb-8">
-  <div className="flex items-center gap-3 mb-3">
-  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-  <BookOpen className="text-white" size={24} strokeWidth={2} />
-   </div>
-    <h1 className="text-4xl font-bold text-slate-900">   Interview Topics    </h1>
-  </div>
-   <p className="text-lg text-slate-600">   Select a category to explore topics and start your preparation   </p>
- </div>
- <div className="space-y-4">
-  {allCategories.map((category) => (
-   <div
-    key={category.slug}
-    className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden"   >
- <button
-   onClick={() =>
- setExpandedCategory(  expandedCategory === category.slug ? null : category.slug   ) }
-  className="w-full p-5 flex items-center justify-between hover:bg-slate-50 transition-colors" >
-  <div className="flex items-center gap-4">
-   <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
-   {getCategoryIcon(category.name)}
-  </div>
-   <div className="text-left">
- <h2 className="text-xl font-bold text-slate-900">
-  {category.name} </h2>
-  <p className="text-sm text-slate-500 mt-0.5">
-     {category.topics.length} topics   </p>
-  </div>
-   </div>
+      <main className="flex-1 p-8 overflow-y-auto relative h-screen">
+        {/* Grid Background */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.4]"
+             style={{
+                backgroundImage: `linear-gradient(to right, #e5e5e5 1px, transparent 1px), linear-gradient(to bottom, #e5e5e5 1px, transparent 1px)`,
+                backgroundSize: '40px 40px'
+             }}>
+        </div>
 
-  <div className="flex items-center gap-3">
- <span className="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
- {expandedCategory === category.slug ? "Collapse" : "Expand"}
-  </span>
-  <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${expandedCategory === category.slug ? "rotate-180" : ""   }`}   />
- </div>
-  </button>
- <div
-  className={`transition-all duration-300 overflow-hidden ${expandedCategory === category.slug
-  ? "max-h-[2000px] opacity-100"   : "max-h-0 opacity-0"   }`} >
-<div className="p-5 pt-0 border-t border-slate-100 bg-slate-50">
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-4">
-  {category.topics.map((topic, topicIdx) => (
+        <div className="max-w-6xl mx-auto relative z-10">
+          
+          {/* Header */}
+          <div className="mb-10 border-b border-neutral-200 pb-6 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+               <div className="w-12 h-12 bg-neutral-900 flex items-center justify-center rounded-sm shadow-sm">
+                  <BookOpen className="text-white" size={20} strokeWidth={1.5} />
+               </div>
+               <div>
+                  <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-neutral-900 rounded-full animate-pulse"></span>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Knowledge Base</p>
+                  </div>
+                  <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">Technical Subjects</h1>
+               </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {allCategories.map((category) => (
+              <div
+                key={category.slug}
+                className={`bg-white border transition-all duration-200 shadow-sm
+                ${expandedCategory === category.slug ? 'border-neutral-900 ring-1 ring-neutral-900' : 'border-neutral-200 hover:border-neutral-400'}`}
+              >
+                <button
+                  onClick={() =>
+                    setExpandedCategory(expandedCategory === category.slug ? null : category.slug)
+                  }
+                  className="w-full p-6 flex items-center justify-between group hover: cursor-pointer"
+                >
+                  <div className="flex items-center gap-6">
+                    <div className={`w-10 h-10 border flex items-center justify-center rounded-sm transition-colors
+                       ${expandedCategory === category.slug ? 'bg-neutral-900 border-neutral-900 text-white' : 'bg-white border-neutral-200 text-neutral-500 group-hover:text-neutral-900 group-hover:border-neutral-900'}`}>
+                      {getCategoryIcon(category.name)}
+                    </div>
+                    <div className="text-left">
+                      <h2 className="text-lg font-bold text-neutral-900 uppercase tracking-wide">
+                        {category.name}
+                      </h2>
+                      <div className="flex items-center gap-2 mt-1">
+                        <FolderOpen size={12} className="text-neutral-400"/>
+                        <p className="text-xs font-mono text-neutral-500">
+                          {category.topics.length} TOPICS
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                     <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 border rounded-sm transition-colors
+                        ${expandedCategory === category.slug ? 'bg-neutral-100 border-neutral-200 text-neutral-900' : 'bg-white border-transparent text-neutral-400'}`}>
+                        {expandedCategory === category.slug ? "Open" : "Closed"}
+                     </span>
+                     <ChevronDown 
+                        className={`w-4 h-4 text-neutral-400 transition-transform duration-300 ${expandedCategory === category.slug ? "rotate-180 text-neutral-900" : ""}`} 
+                     />
+                  </div>
+                </button>
+
+                <div
+                  className={`transition-all duration-300 overflow-hidden ${
+                    expandedCategory === category.slug ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="p-6 pt-0 border-t border-neutral-100 bg-neutral-50/50">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-6">
+                      {category.topics.map((topic, topicIdx) => (
                         <button
                           key={topicIdx}
                           onClick={() => handleTopicClick(category.name, topic)}
-                          className="text-left p-3.5 rounded-lg bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-slate-700 hover:text-blue-700"
+                          className="text-left px-4 py-3 rounded-sm bg-white border border-neutral-200 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white transition-all text-sm font-medium text-neutral-600 group flex items-center justify-between cursor-pointer"
                         >
                           {topic}
+                          <span className="opacity-0 group-hover:opacity-100 text-[10px] font-mono">→</span>
                         </button>
- ))}
- </div>
-   </div>
- </div>
-   </div>
-  ))}
- </div>
-  </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </main>
     </div>
   );
