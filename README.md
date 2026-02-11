@@ -40,7 +40,7 @@ Your data and history are protected. Every user has a private dashboard to manag
 | **Database** | **PostgreSQL** | Relational data for complex interview history and analytics. |
 | **ORM** | **Prisma** | Type-safe database interactions and easy schema management. |
 | **AI Engine** | **Gemini API** | To generate context-aware questions and evaluate answers. |
-| **Voice Tech**| **Vapi AI / Web Speech API** | For realistic voice-based mock interview sessions. |
+| **Voice Tech**| **DeepGram API** | For realistic voice-based mock interview sessions. |
 | **Authentication** | **JWT (JSON Web Tokens)** | Secures user sessions and protects private interview data. |
 ---
 
