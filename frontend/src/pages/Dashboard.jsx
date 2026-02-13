@@ -36,17 +36,6 @@ export default function Dashboard() {
     navigate("/login");
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#FDFCF8] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-           <div className="w-12 h-12 border-2 border-neutral-200 border-t-neutral-900 rounded-full animate-spin"></div>
-           <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-[#FDFCF8] flex font-sans text-neutral-900 selection:bg-neutral-900 selection:text-white">
       <style>{`
@@ -81,7 +70,13 @@ export default function Dashboard() {
             <div className="flex items-center gap-4">
               <div className="text-right hidden md:block">
                 <p className="text-[10px] text-neutral-400 uppercase font-bold tracking-widest">Operator</p>
-                <p className="text-sm font-bold text-neutral-900">{user?.name || "User"}</p>
+                <div className="text-sm font-bold text-neutral-900">
+                  {loading ? (
+                    <div className="h-4 w-20 bg-neutral-200 animate-pulse rounded"></div>
+                  ) : (
+                    user?.name || "User"
+                  )}
+                </div>
               </div>
               <div className="w-10 h-10 bg-neutral-900 text-white flex items-center justify-center font-bold text-sm rounded-sm">
                 {user?.email ? user.email.charAt(0).toUpperCase() : "?"}
@@ -99,7 +94,13 @@ export default function Dashboard() {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Total Sessions</span>
                 <TrendingUp size={18} className="text-neutral-400 group-hover:text-neutral-900 transition-colors"/>
               </div>
-              <p className="text-4xl font-bold text-neutral-900 tracking-tight"> {analytics?.totalInterviews ?? 0} </p>
+              <div className="text-4xl font-bold text-neutral-900 tracking-tight">
+                {loading ? (
+                  <div className="h-10 w-16 bg-neutral-200 animate-pulse rounded"></div>
+                ) : (
+                  analytics?.totalInterviews ?? 0
+                )}
+              </div>
               <p className="text-xs text-neutral-400 mt-2 font-mono">interviews completed</p>
             </div>
 
@@ -113,10 +114,14 @@ export default function Dashboard() {
               </div>
 
               <div className="relative z-10">
-                <p className="text-4xl font-bold text-neutral-900 tracking-tight">
-                  {analytics?.successScore ?? 0}
+                <div className="text-4xl font-bold text-neutral-900 tracking-tight">
+                  {loading ? (
+                    <div className="h-10 w-20 bg-neutral-200 animate-pulse rounded"></div>
+                  ) : (
+                    analytics?.successScore ?? 0
+                  )}
                   <span className="text-lg text-neutral-400 font-medium">%</span>
-                </p>
+                </div>
 
                 {/* Progress Bar */}
                 <div className="mt-4 h-2 bg-neutral-100 rounded-sm overflow-hidden">
@@ -146,10 +151,14 @@ export default function Dashboard() {
                 <Flame size={18} className="text-neutral-400 group-hover:text-neutral-900 transition-colors"/>
               </div>
 
-              <p className="text-4xl font-bold text-neutral-900 tracking-tight relative z-10">
-                {analytics?.currentStreak ?? 0}
+              <div className="text-4xl font-bold text-neutral-900 tracking-tight relative z-10">
+                {loading ? (
+                  <div className="h-10 w-16 bg-neutral-200 animate-pulse rounded"></div>
+                ) : (
+                  analytics?.currentStreak ?? 0
+                )}
                 <span className="text-lg text-neutral-400 font-medium ml-1">days</span>
-              </p>
+              </div>
 
               {/* Streak Visual */}
               <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center gap-1 relative z-10">
@@ -207,7 +216,13 @@ export default function Dashboard() {
             </div>
 
             <div className="bg-white border border-neutral-200 rounded-sm shadow-sm">
-              {analytics?.recentAttempts?.length > 0 ? (
+              {loading ? (
+                <div className="p-6 space-y-4">
+                  {[1,2,3].map(i => (
+                    <div key={i} className="h-16 bg-neutral-100 animate-pulse rounded"></div>
+                  ))}
+                </div>
+              ) : analytics?.recentAttempts?.length > 0 ? (
                 <div className="divide-y divide-neutral-100">
                   {analytics.recentAttempts.map((item) => (
                     <div
