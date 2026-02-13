@@ -9,12 +9,11 @@ const Subjects = lazy(() => import("./pages/Subjects"))
 const QuizMode = lazy(() => import("./pages/QuizMode"))
 const QuizResults = lazy(() => import("./pages/QuizResults"))
 const MyAttempts = lazy(() => import("./pages/MyAttempts"))
-const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"))
 const StartInterview = lazy(() => import("./pages/Interview"))
 const InterviewSession = lazy(() => import("./pages/InterviewSession"))
 const InterviewSummary = lazy(() => import("./pages/InterviewSummary"))
 const AIAttempts = lazy(() => import("./pages/AIAttempts"))
-
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
   return (
